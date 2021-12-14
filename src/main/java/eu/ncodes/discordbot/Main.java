@@ -1,12 +1,14 @@
 package eu.ncodes.discordbot;
 
-import eu.ncodes.discordbot.test.Test;
+import eu.ncodes.discordbot.bots.supporter.Supporter;
+import eu.ncodes.discordbot.utils.DiscordTokens;
+import eu.ncodes.discordbot.utils.DiscordUtils;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Test test = new Test(DiscordTokens.TEST());
+        DiscordUtils.SUPPORTER = new Supporter(DiscordTokens.SUPPORTER());
 
     }
 
