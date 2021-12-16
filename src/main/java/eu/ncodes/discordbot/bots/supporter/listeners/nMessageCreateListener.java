@@ -1,5 +1,8 @@
 package eu.ncodes.discordbot.bots.supporter.listeners;
 
+import com.google.gson.Gson;
+import eu.ncodes.discordbot.bots.supporter.instances.nMessage;
+import eu.ncodes.discordbot.utils.DiscordUtils;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
@@ -32,6 +35,23 @@ public class nMessageCreateListener implements MessageCreateListener {
                 }
                 event.getMessage().reply("You have to mention 1 text channel!");
             }
+
+            else if(splitter[1].equals("cache")){
+                if(event.getMessageAuthor().getIdAsString().equals("397714589548019722")){
+                    event.getMessage().reply("```json\n" + new Gson().toJson(DiscordUtils.SUPPORTER.getSupports()) + "\n```");
+                }
+            }
+
+        }
+
+        else if(event.getChannel().asServerTextChannel().get().getCategory().get().getIdAsString().equals("852878611378995230") &&
+                !event.getMessageAuthor().isBotUser()){
+
+            String channelName = event.getServer().get().getTextChannelById(event.getChannel().getId()).get().getName();
+
+            int id = Integer.parseInt(channelName.substring(0, channelName.indexOf("-")));
+            nMessage message = new nMessage(event.getMessageId(), event.getMessageAuthor().getId(), event.getMessage().getCreationTimestamp(), event.getMessageContent());
+            DiscordUtils.SUPPORTER.getSupportById(id).addMessage(message);
 
         }
 
