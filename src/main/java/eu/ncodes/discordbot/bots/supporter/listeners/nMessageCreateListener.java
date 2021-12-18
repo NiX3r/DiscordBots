@@ -110,50 +110,54 @@ public class nMessageCreateListener implements MessageCreateListener {
 
         }
 
-        else if(event.getChannel().asServerTextChannel().get().getCategory().get().getIdAsString().equals(DiscordDefaultIDs.categorySupport) &&
-                !event.getMessageAuthor().isBotUser()){
+        event.getChannel().asServerTextChannel().get().getCategory().ifPresent(channelCategory -> {
 
-            String channelName = event.getServer().get().getTextChannelById(event.getChannel().getId()).get().getName();
-            int id = Integer.parseInt(channelName.substring(0, channelName.indexOf("-")));
-            nMessage message = new nMessage(event.getMessageId(), event.getMessageAuthor().getId(), event.getMessage().getCreationTimestamp(), event.getMessageContent());
-            nSupport support = DiscordUtils.supporter.getSupportById(id);
+            if(channelCategory.getIdAsString().equals(DiscordDefaultIDs.categorySupport) &&
+                    !event.getMessageAuthor().isBotUser()){
 
-            for (MessageAttachment attachment : event.getMessage().getAttachments()){
+                String channelName = event.getServer().get().getTextChannelById(event.getChannel().getId()).get().getName();
+                int id = Integer.parseInt(channelName.substring(0, channelName.indexOf("-")));
+                nMessage message = new nMessage(event.getMessageId(), event.getMessageAuthor().getId(), event.getMessage().getCreationTimestamp(), event.getMessageContent());
+                nSupport support = DiscordUtils.supporter.getSupportById(id);
 
-                String key, fileName;
-                try {
+                for (MessageAttachment attachment : event.getMessage().getAttachments()){
 
-                    byte[] file = attachment.downloadAsByteArray().get();
-                    System.out.println(file.length);
-                    fileName = attachment.getFileName();
-                    key = fileName.substring(0, fileName.indexOf("."));
-                    String path = "./logs/" + support.getCreated().getYear() + "/" + support.getCreated().getMonthValue() + "/" + support.getCreated().getDayOfMonth() + "/" + support.getId() + "-" + support.getOwnerName() + "/" + fileName;
+                    String key, fileName;
+                    try {
 
-                    try (FileOutputStream fos = new FileOutputStream(path)) {
-                        fos.write(file);
-                        fos.flush();
+                        byte[] file = attachment.downloadAsByteArray().get();
+                        System.out.println(file.length);
+                        fileName = attachment.getFileName();
+                        key = fileName.substring(0, fileName.indexOf("."));
+                        String path = "./logs/" + support.getCreated().getYear() + "/" + support.getCreated().getMonthValue() + "/" + support.getCreated().getDayOfMonth() + "/" + support.getId() + "-" + support.getOwnerName() + "/" + fileName;
+
+                        try (FileOutputStream fos = new FileOutputStream(path)) {
+                            fos.write(file);
+                            fos.flush();
+                        }
+
+                        message.addAttachment(key, path);
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
-                    message.addAttachment(key, path);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+
+                support.addMessage(message);
+
+                if(!DiscordUtils.supporter.getSupportById(id).isMemberInSupport(event.getMessageAuthor().getId()))
+                    DiscordUtils.supporter.getSupportById(id).addMember(event.getMessageAuthor().getId(), event.getMessageAuthor().getName());
 
             }
 
-            support.addMessage(message);
-
-            if(!DiscordUtils.supporter.getSupportById(id).isMemberInSupport(event.getMessageAuthor().getId()))
-                DiscordUtils.supporter.getSupportById(id).addMember(event.getMessageAuthor().getId(), event.getMessageAuthor().getName());
-
-        }
+        });
 
     }
 
