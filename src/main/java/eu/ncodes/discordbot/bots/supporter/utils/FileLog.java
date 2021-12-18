@@ -15,8 +15,7 @@ public class FileLog {
 
     public static void saveLog(nSupport support, Consumer<Exception> consumer){
 
-        LocalDateTime date = LocalDateTime.now();
-        String path = "./logs/" + date.getYear() + "/" + date.getMonthValue() + "/" + date.getDayOfMonth() + "/" + support.getId() + "-" + support.getOwnerName();
+        String path = "./logs/" + support.getCreated().getYear() + "/" + support.getCreated().getMonthValue() + "/" + support.getCreated().getDayOfMonth() + "/" + support.getId() + "-" + support.getOwnerName();
         File file = new File(path);
         file.mkdirs();
         try {

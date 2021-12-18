@@ -8,6 +8,7 @@ import eu.ncodes.discordbot.utils.DiscordDefaultIDs;
 import eu.ncodes.discordbot.utils.DiscordUtils;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.message.MessageAttachment;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
@@ -21,8 +22,12 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 
 public class nMessageCreateListener implements MessageCreateListener {
@@ -61,7 +66,6 @@ public class nMessageCreateListener implements MessageCreateListener {
 
                     if(splitter[2].equals("add")){
                         event.getChannel().asServerChannel().get().createUpdater().addPermissionOverwrite(targetUser, Permissions.fromBitmask(1024, 0)).update().join();
-                        DiscordUtils.supporter.getSupportById(id).addMember(targetUser.getId(), targetUser.getName());
                         event.getMessage().reply("You successfully added " + targetUser.getMentionTag());
                     }
                     else {
@@ -106,13 +110,48 @@ public class nMessageCreateListener implements MessageCreateListener {
 
         }
 
-        else if(event.getChannel().asServerTextChannel().get().getCategory().get().getIdAsString().equals("852878611378995230") &&
+        else if(event.getChannel().asServerTextChannel().get().getCategory().get().getIdAsString().equals(DiscordDefaultIDs.categorySupport) &&
                 !event.getMessageAuthor().isBotUser()){
 
             String channelName = event.getServer().get().getTextChannelById(event.getChannel().getId()).get().getName();
             int id = Integer.parseInt(channelName.substring(0, channelName.indexOf("-")));
             nMessage message = new nMessage(event.getMessageId(), event.getMessageAuthor().getId(), event.getMessage().getCreationTimestamp(), event.getMessageContent());
-            DiscordUtils.supporter.getSupportById(id).addMessage(message);
+            nSupport support = DiscordUtils.supporter.getSupportById(id);
+
+            for (MessageAttachment attachment : event.getMessage().getAttachments()){
+
+                String key, fileName;
+                try {
+
+                    byte[] file = attachment.downloadAsByteArray().get();
+                    System.out.println(file.length);
+                    fileName = attachment.getFileName();
+                    key = fileName.substring(0, fileName.indexOf("."));
+                    String path = "./logs/" + support.getCreated().getYear() + "/" + support.getCreated().getMonthValue() + "/" + support.getCreated().getDayOfMonth() + "/" + support.getId() + "-" + support.getOwnerName() + "/" + fileName;
+
+                    try (FileOutputStream fos = new FileOutputStream(path)) {
+                        fos.write(file);
+                        fos.flush();
+                    }
+
+                    message.addAttachment(key, path);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            support.addMessage(message);
+
+            if(!DiscordUtils.supporter.getSupportById(id).isMemberInSupport(event.getMessageAuthor().getId()))
+                DiscordUtils.supporter.getSupportById(id).addMember(event.getMessageAuthor().getId(), event.getMessageAuthor().getName());
 
         }
 
