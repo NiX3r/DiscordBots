@@ -20,7 +20,7 @@ public class Defaults {
         )).setDefaultPermission(false).createGlobal(DiscordUtils.SUPPORTER.GetAPI()).join();*/
 
         SlashCommand command = SlashCommand.with("ping", "Checks the functionality of this command")
-                .createGlobal(DiscordUtils.SUPPORTER.getAPI())
+                .createGlobal(DiscordUtils.supporter.getAPI())
                 .join();
 
     }

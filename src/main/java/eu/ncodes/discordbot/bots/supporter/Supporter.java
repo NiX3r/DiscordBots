@@ -35,7 +35,7 @@ public class Supporter {
 
     public void initializeBot(){
 
-        this.bot = new DiscordApiBuilder().setToken(this.token).login().join();
+        this.bot = new DiscordApiBuilder().setToken(this.token).setAllIntents().login().join();
 
         this.bot.addMessageCreateListener(new nMessageCreateListener());
         this.bot.addMessageComponentCreateListener(new nMessageComponentCreateListener());
@@ -61,6 +61,13 @@ public class Supporter {
     public nSupport getSupportById(int id){
         for(nSupport sup : this.supports){
             if(sup.getId() == id)
+                return sup;
+        }
+        return null;
+    }
+    public nSupport getSupportByOwnerId(long ownerId){
+        for(nSupport sup : this.supports){
+            if(sup.getOwnerId() == ownerId)
                 return sup;
         }
         return null;

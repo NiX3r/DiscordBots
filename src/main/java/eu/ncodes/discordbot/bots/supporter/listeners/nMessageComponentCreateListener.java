@@ -2,6 +2,7 @@ package eu.ncodes.discordbot.bots.supporter.listeners;
 
 import com.google.gson.Gson;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
+import eu.ncodes.discordbot.utils.DiscordDefaultIDs;
 import eu.ncodes.discordbot.utils.DiscordUtils;
 import org.javacord.api.entity.channel.ChannelCategory;
 import org.javacord.api.entity.permission.Permissions;
@@ -43,17 +44,17 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
     private void startSupport(Server server, User user){
 
         long id = server.createTextChannelBuilder()
-                .setCategory(server.getChannelCategoryById("852878611378995230").get())
-                .setName(DiscordUtils.SUPPORTER.getSupportsIndex() + "-" + user.getName())
+                .setCategory(server.getChannelCategoryById(DiscordDefaultIDs.categorySupport).get())
+                .setName(DiscordUtils.supporter.getSupportsIndex() + "-" + user.getName())
                 .addPermissionOverwrite(server.getEveryoneRole(), Permissions.fromBitmask(0, 1024))
-                .addPermissionOverwrite(server.getRoleById("723490876898148352").get(), Permissions.fromBitmask(1024))
+                .addPermissionOverwrite(server.getRoleById(DiscordDefaultIDs.roleAtMember).get(), Permissions.fromBitmask(1024))
                 .addPermissionOverwrite(user, Permissions.fromBitmask(1024))
                 .create().join().getId();
 
-        nSupport support = new nSupport(user.getId(), user.getName(), DiscordUtils.SUPPORTER.getSupportsIndex(), types.get(user.getId()));
-        DiscordUtils.SUPPORTER.addSupport(support);
+        nSupport support = new nSupport(DiscordUtils.supporter.getSupportsIndex(), id, user.getId(), user.getName(), types.get(user.getId()));
+        DiscordUtils.supporter.addSupport(support);
         types.remove(user.getId());
-        DiscordUtils.SUPPORTER.incrementSupportsIndex();
+        DiscordUtils.supporter.incrementSupportsIndex();
 
         server.getTextChannelById(id).get().sendMessage( "Type: " + support.getType() + "\nPlease try to specify your problem!\n" + user.getMentionTag());
 

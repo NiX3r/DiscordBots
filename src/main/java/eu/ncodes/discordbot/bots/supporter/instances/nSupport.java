@@ -7,18 +7,20 @@ import java.util.List;
 
 public class nSupport {
 
+    private int id;
+    private long channelId;
     private long ownerId;
     private String ownerName;
-    private int id;
     private String type;
     private LocalDateTime created;
     private HashMap<Long, String> members;
     private ArrayList<nMessage> messages;
 
-    public nSupport(long ownerId, String ownerName, int id, String type){
+    public nSupport(int id, long channelId, long ownerId, String ownerName, String type){
+        this.id = id;
+        this.channelId = channelId;
         this.ownerId = ownerId;
         this.ownerName = ownerName;
-        this.id = id;
         this.type = type;
         this.created = LocalDateTime.now();
         this.members = new HashMap<Long, String>();
@@ -43,5 +45,6 @@ public class nSupport {
     public void addMessage(nMessage message){
         this.messages.add(message);
     }
+    public void addMember(Long userId, String userName){ this.members.put(userId, userName); }
 
 }
