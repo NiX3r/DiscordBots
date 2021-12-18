@@ -2,6 +2,8 @@ package eu.ncodes.discordbot.bots.supporter.listeners;
 
 import com.google.gson.Gson;
 import eu.ncodes.discordbot.bots.supporter.instances.nMessage;
+import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
+import eu.ncodes.discordbot.bots.supporter.utils.FileLog;
 import eu.ncodes.discordbot.utils.DiscordDefaultIDs;
 import eu.ncodes.discordbot.utils.DiscordUtils;
 import org.javacord.api.entity.channel.ServerTextChannel;
@@ -59,12 +61,39 @@ public class nMessageCreateListener implements MessageCreateListener {
 
                     if(splitter[2].equals("add")){
                         event.getChannel().asServerChannel().get().createUpdater().addPermissionOverwrite(targetUser, Permissions.fromBitmask(1024, 0)).update().join();
+                        DiscordUtils.supporter.getSupportById(id).addMember(targetUser.getId(), targetUser.getName());
                         event.getMessage().reply("You successfully added " + targetUser.getMentionTag());
                     }
                     else {
                         event.getChannel().asServerChannel().get().createUpdater().addPermissionOverwrite(targetUser, Permissions.fromBitmask(0, 1024)).update().join();
                         event.getMessage().reply("You successfully removed " + targetUser.getMentionTag());
                     }
+
+                }
+            }
+
+            else if(splitter[1].equals("close")){
+                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaultIDs.roleSupport) ||
+                        DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaultIDs.roleAtMember)){
+
+                    event.getMessage().reply(event.getMessageAuthor().asUser().get().getMentionTag() + " you're closing this ticket!");
+                    String channelName = event.getServer().get().getTextChannelById(event.getChannel().getId()).get().getName();
+                    int id = Integer.parseInt(channelName.substring(0, channelName.indexOf("-")));
+
+                    nSupport support = DiscordUtils.supporter.getSupportById(id);
+                    FileLog.saveLog(support, error -> {
+
+                        if(error == null){
+
+                            DiscordUtils.supporter.removeSupport(support);
+                            event.getMessage().reply(event.getMessageAuthor().asUser().get().getMentionTag() + ", this channel will now close!");
+                            event.getServerTextChannel().get().delete();
+
+                        }
+
+                    });
+
+
 
                 }
             }

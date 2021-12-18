@@ -4,18 +4,19 @@ import java.sql.Timestamp;
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 public class nMessage {
 
     private long id;
     private long owner;
-    private Instant created;
+    private LocalDateTime created;
     private String content;
 
     public nMessage(long id, long owner, Instant created, String content){
         this.id = id;
         this.owner = owner;
-        this.created = created;
+        this.created = LocalDateTime.ofInstant(created, ZoneOffset.UTC);
         this.content = content;
     }
 
@@ -25,7 +26,7 @@ public class nMessage {
     public long GetOwner(){
         return this.owner;
     }
-    public Instant GetCreated(){
+    public LocalDateTime GetCreated(){
         return this.created;
     }
     public String GetContent(){

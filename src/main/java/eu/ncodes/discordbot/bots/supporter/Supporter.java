@@ -48,10 +48,11 @@ public class Supporter {
     public void disconnect(){
         this.bot.disconnect();
     }
-    public void incrementSupportsIndex(){ this.supportIndex++; }
+    public void incrementSupportsIndex(){ if(this.supportIndex == Integer.MAX_VALUE) this.supportIndex = 0; else this.supportIndex++; }
     public void addSupport(nSupport support){
         this.supports.add(support);
     }
+    public void removeSupport(nSupport support){ this.supports.remove(support); }
 
     public DiscordApi getAPI(){
         return this.bot;
