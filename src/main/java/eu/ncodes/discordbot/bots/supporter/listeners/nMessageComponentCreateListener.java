@@ -1,10 +1,10 @@
 package eu.ncodes.discordbot.bots.supporter.listeners;
 
-import com.google.gson.Gson;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
-import eu.ncodes.discordbot.utils.DiscordDefaultIDs;
+import eu.ncodes.discordbot.utils.DiscordDefaults;
 import eu.ncodes.discordbot.utils.DiscordUtils;
-import org.javacord.api.entity.channel.ChannelCategory;
+import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.permission.Permissions;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
@@ -12,6 +12,11 @@ import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.interaction.MessageComponentInteraction;
 import org.javacord.api.listener.interaction.MessageComponentCreateListener;
 
+import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.FormatStyle;
 import java.util.HashMap;
 
 public class nMessageComponentCreateListener implements MessageComponentCreateListener {
@@ -26,9 +31,11 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
         switch (customId){
             case "ncodes-support-list":
                 types.put(messageComponentInteraction.getUser().getId(), messageComponentInteraction.asSelectMenuInteraction().get().getChosenOptions().get(0).getLabel());
+                messageComponentInteraction.asSelectMenuInteraction().get().acknowledge();
                 break;
             case "ncodes-support":
                 startSupport(messageComponentInteraction.getServer().get(), messageComponentInteraction.getUser());
+                messageComponentInteraction.asButtonInteraction().get().acknowledge();
                 break;
         }
 
@@ -36,7 +43,7 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
         // but if it's not here Discord will show
         // user some kind of error message. Due it
         // it's here forever. Sorry future me!
-        event.getMessageComponentInteraction().createImmediateResponder().respond();
+        //event.getMessageComponentInteraction().createImmediateResponder().respond();
         return;
 
     }
@@ -44,19 +51,37 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
     private void startSupport(Server server, User user){
 
         long id = server.createTextChannelBuilder()
-                .setCategory(server.getChannelCategoryById(DiscordDefaultIDs.categorySupport).get())
+                .setCategory(server.getChannelCategoryById(DiscordDefaults.categorySupport).get())
                 .setName(DiscordUtils.supporter.getSupportsIndex() + "-" + user.getName())
+                .setTopic("**Owner**: *" + user.getName() + "* | **Type**: *" + types.get(user.getId()))
                 .addPermissionOverwrite(server.getEveryoneRole(), Permissions.fromBitmask(0, 1024))
-                .addPermissionOverwrite(server.getRoleById(DiscordDefaultIDs.roleAtMember).get(), Permissions.fromBitmask(1024))
+                .addPermissionOverwrite(server.getRoleById(DiscordDefaults.roleAtMember).get(), Permissions.fromBitmask(1024))
                 .addPermissionOverwrite(user, Permissions.fromBitmask(1024))
                 .create().join().getId();
+
+
+        user.addRole(server.getRoleById(DiscordDefaults.roleSupport).get());
 
         nSupport support = new nSupport(DiscordUtils.supporter.getSupportsIndex(), id, user.getId(), user.getName(), types.get(user.getId()));
         DiscordUtils.supporter.addSupport(support);
         types.remove(user.getId());
         DiscordUtils.supporter.incrementSupportsIndex();
 
-        server.getTextChannelById(id).get().sendMessage( "Type: " + support.getType() + "\nPlease try to specify your problem!\n" + user.getMentionTag());
+        EmbedBuilder builder = new EmbedBuilder()
+                .setColor(Color.decode("#7900FF"))
+                .setThumbnail("http://documents.ncodes.eu/support.jpg")
+                .setTitle("Ticket System :tickets: ")
+                .setDescription("Hi! " + user.getMentionTag() +  ":wave: \nPlease try to most specify your problem.\nWe'll respond as much quick as possible. :ok_hand: ")
+                .addField("ID", String.valueOf(support.getId()))
+                .addField("Type", support.getType())
+                .addField("Owner", user.getName())
+                .addField("Owner ID", user.getIdAsString())
+                .addField("Created", support.getCreated().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM)));
+
+        new MessageBuilder()
+                .setEmbed(builder)
+                .setContent(" " + user.getMentionTag() + " :ear: :ear: ")
+                .send(server.getTextChannelById(id).get()).join();
 
     }
 

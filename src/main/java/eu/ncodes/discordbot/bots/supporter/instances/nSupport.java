@@ -28,13 +28,13 @@ public class nSupport {
         this.messages = new ArrayList<nMessage>();
     }
 
-    public long getOwnerId(){return this.ownerId;}
-    public String getOwnerName(){return this.ownerName;}
-    public int getId(){return this.id;}
-    public String getType(){return this.type;}
-    public LocalDateTime getCreated(){return this.created;}
-    public HashMap<Long,String> getMembers(){return this.members;}
-    public ArrayList<nMessage> getMessages(){return this.messages;}
+    public long getOwnerId(){ return this.ownerId; }
+    public String getOwnerName(){ return this.ownerName; }
+    public int getId(){ return this.id; }
+    public String getType(){ return this.type; }
+    public LocalDateTime getCreated(){ return this.created; }
+    public HashMap<Long,String> getMembers(){ return this.members; }
+    public ArrayList<nMessage> getMessages(){ return this.messages; }
     public boolean isMemberInSupport(Long id){
         return this.members.containsKey(id);
     }

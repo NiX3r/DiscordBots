@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import eu.ncodes.discordbot.bots.supporter.instances.nMessage;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
 import eu.ncodes.discordbot.bots.supporter.utils.FileLog;
-import eu.ncodes.discordbot.utils.DiscordDefaultIDs;
+import eu.ncodes.discordbot.utils.DiscordDefaults;
 import eu.ncodes.discordbot.utils.DiscordUtils;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
@@ -15,18 +15,18 @@ import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.component.SelectMenu;
 import org.javacord.api.entity.message.component.SelectMenuOption;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.permission.Permissions;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 
 import java.awt.*;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 
@@ -42,69 +42,29 @@ public class nMessageCreateListener implements MessageCreateListener {
             if(splitter[1].equals("msg") || splitter[1].equals("message")){
                 if(event.getMessage().getMentionedChannels().size() == 1){
                     onCreateMessage(event.getMessage().getMentionedChannels().get(0));
-                    return;
                 }
                 event.getMessage().reply("You have to mention 1 text channel!");
             }
 
             else if(splitter[1].equals("member") && (splitter[2].equals("add") || splitter[2].equals("remove")) && splitter.length == 4){
-                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaultIDs.roleSupport) ||
-                        DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaultIDs.roleAtMember)){
+                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleSupport) ||
+                        DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAtMember)){
 
-                    String channelName = event.getServer().get().getTextChannelById(event.getChannel().getId()).get().getName();
-                    int id = Integer.parseInt(channelName.substring(0, channelName.indexOf("-")));
-                    DiscordUtils.supporter.getSupportById(id).addMember(event.getMessageAuthor().getId(), event.getMessageAuthor().getName());
-                    User targetUser = null;
-                    try{
-                        targetUser = event.getServer().get().getMemberById(splitter[3]).get();
-                    }
-                    catch(Exception ex){
-                        event.getMessage().reply("Target user with id '" + splitter[3] + "' doesn't exists!");
-                        ex.printStackTrace();
-                        return;
-                    }
-
-                    if(splitter[2].equals("add")){
-                        event.getChannel().asServerChannel().get().createUpdater().addPermissionOverwrite(targetUser, Permissions.fromBitmask(1024, 0)).update().join();
-                        event.getMessage().reply("You successfully added " + targetUser.getMentionTag());
-                    }
-                    else {
-                        event.getChannel().asServerChannel().get().createUpdater().addPermissionOverwrite(targetUser, Permissions.fromBitmask(0, 1024)).update().join();
-                        event.getMessage().reply("You successfully removed " + targetUser.getMentionTag());
-                    }
+                    onMember(event, splitter[2], splitter[3]);
 
                 }
             }
 
             else if(splitter[1].equals("close")){
-                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaultIDs.roleSupport) ||
-                        DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaultIDs.roleAtMember)){
-
-                    event.getMessage().reply(event.getMessageAuthor().asUser().get().getMentionTag() + " you're closing this ticket!");
-                    String channelName = event.getServer().get().getTextChannelById(event.getChannel().getId()).get().getName();
-                    int id = Integer.parseInt(channelName.substring(0, channelName.indexOf("-")));
-
-                    nSupport support = DiscordUtils.supporter.getSupportById(id);
-                    FileLog.saveLog(support, error -> {
-
-                        if(error == null){
-
-                            DiscordUtils.supporter.removeSupport(support);
-                            event.getMessage().reply(event.getMessageAuthor().asUser().get().getMentionTag() + ", this channel will now close!");
-                            event.getServerTextChannel().get().delete();
-
-                        }
-
-                    });
-
-
-
+                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleSupport) ||
+                        DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAtMember)){
+                    onClose(event);
                 }
             }
 
             else if(splitter[1].equals("cache")){
-                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaultIDs.roleAdmin)){
-                    event.getMessage().reply("```json\n" + new Gson().toJson(DiscordUtils.supporter.getSupports()) + "\n```");
+                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAdmin)){
+                    onCache(event.getMessage());
                 }
             }
 
@@ -112,7 +72,7 @@ public class nMessageCreateListener implements MessageCreateListener {
 
         event.getChannel().asServerTextChannel().get().getCategory().ifPresent(channelCategory -> {
 
-            if(channelCategory.getIdAsString().equals(DiscordDefaultIDs.categorySupport) &&
+            if(channelCategory.getIdAsString().equals(DiscordDefaults.categorySupport) &&
                     !event.getMessageAuthor().isBotUser()){
 
                 String channelName = event.getServer().get().getTextChannelById(event.getChannel().getId()).get().getName();
@@ -129,14 +89,16 @@ public class nMessageCreateListener implements MessageCreateListener {
                         System.out.println(file.length);
                         fileName = attachment.getFileName();
                         key = fileName.substring(0, fileName.indexOf("."));
-                        String path = "./logs/" + support.getCreated().getYear() + "/" + support.getCreated().getMonthValue() + "/" + support.getCreated().getDayOfMonth() + "/" + support.getId() + "-" + support.getOwnerName() + "/" + fileName;
+                        String path = "./logs/" + support.getCreated().getYear() + "/" + support.getCreated().getMonthValue() + "/" + support.getCreated().getDayOfMonth() + "/" + support.getId() + "-" + support.getOwnerName();
 
-                        try (FileOutputStream fos = new FileOutputStream(path)) {
+                        new File(path).mkdirs();
+
+                        try (FileOutputStream fos = new FileOutputStream(path + "/" + fileName)) {
                             fos.write(file);
                             fos.flush();
                         }
 
-                        message.addAttachment(key, path);
+                        message.addAttachment(key, path + "/" + fileName);
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -161,6 +123,61 @@ public class nMessageCreateListener implements MessageCreateListener {
 
     }
 
+    private void onMember(MessageCreateEvent event, String subCommand, String targetId){
+        String channelName = event.getServer().get().getTextChannelById(event.getChannel().getId()).get().getName();
+        int id = Integer.parseInt(channelName.substring(0, channelName.indexOf("-")));
+        DiscordUtils.supporter.getSupportById(id).addMember(event.getMessageAuthor().getId(), event.getMessageAuthor().getName());
+        User targetUser = null;
+        try{
+            targetUser = event.getServer().get().getMemberById(targetId).get();
+        }
+        catch(Exception ex){
+            event.getMessage().reply("Target user with id '" + targetId + "' doesn't exists!");
+            ex.printStackTrace();
+            return;
+        }
+
+        if(subCommand.equals("add")){
+            event.getChannel().asServerChannel().get().createUpdater().addPermissionOverwrite(targetUser, Permissions.fromBitmask(1024, 0)).update().join();
+            event.getMessage().reply("You successfully added " + targetUser.getMentionTag());
+        }
+        else {
+            event.getChannel().asServerChannel().get().createUpdater().addPermissionOverwrite(targetUser, Permissions.fromBitmask(0, 1024)).update().join();
+            event.getMessage().reply("You successfully removed " + targetUser.getMentionTag());
+        }
+    }
+
+    private void onClose(MessageCreateEvent event){
+        event.getMessage().reply(event.getMessageAuthor().asUser().get().getMentionTag() + " you're closing this ticket!");
+        String channelName = event.getServer().get().getTextChannelById(event.getChannel().getId()).get().getName();
+        int id = Integer.parseInt(channelName.substring(0, channelName.indexOf("-")));
+
+        nSupport support = DiscordUtils.supporter.getSupportById(id);
+        event.getMessageAuthor().asUser().get().removeRole(event.getServer().get().getRoleById(DiscordDefaults.roleSupport).get());
+        FileLog.saveLog(support, error -> {
+
+            if(error == null){
+
+                DiscordUtils.supporter.removeSupport(support);
+                event.getMessage().reply(event.getMessageAuthor().asUser().get().getMentionTag() + ", this channel will now close!");
+                event.getServerTextChannel().get().delete();
+
+            }
+
+        });
+    }
+
+    private void onCache(Message message){
+
+        byte[] file = (new Gson().toJson(DiscordUtils.supporter.getSupports())).getBytes();
+
+        new MessageBuilder()
+                .setContent("Here is mine cache!")
+                .addAttachment(file, "cache.json")
+                .send(message.getChannel());
+
+    }
+
     private void onCreateMessage(ServerTextChannel channel){
 
         EmbedBuilder builder = new EmbedBuilder()
@@ -171,7 +188,8 @@ public class nMessageCreateListener implements MessageCreateListener {
                 .addField("Rule #1", "Don't abuse ticket system")
                 .addField("Rule #2", "After create ticket try to most specify your problem")
                 .addField("To add member into ticket", "n!s member add <user id>")
-                .addField("To close ticket", "n!s close");
+                .addField("To close ticket", "n!s close")
+                .setFooter("Discord is in beta version!");
 
         new MessageBuilder()
         .setEmbed(builder)
