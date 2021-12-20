@@ -114,7 +114,9 @@ public class nMessageCreateListener implements MessageCreateListener {
         */
         else{
             event.getChannel().asServerTextChannel().get().getCategory().ifPresent(channelCategory -> {
-
+                /*
+                    Checks if channel is in category and sender isn't bot
+                */
                 if(channelCategory.getIdAsString().equals(DiscordDefaults.categorySupport) &&
                         !event.getMessageAuthor().isBotUser()){
 
