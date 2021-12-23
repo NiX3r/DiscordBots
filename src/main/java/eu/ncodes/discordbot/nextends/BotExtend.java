@@ -14,17 +14,17 @@ public class BotExtend {
     public void initializeBot(){
         this.bot = new DiscordApiBuilder().setToken(this.token).setAllIntents().login().join();
         initializeLogListeners();
-        LogSystem.log(getPrefix() + " bot initialized and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log(getPrefix(), "bot initialized and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
     }
     public void initializeLogListeners(){
         this.bot.addLostConnectionListener(listener -> {
-            LogSystem.log(getPrefix() + " lost connection", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log(getPrefix(), "lost connection", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
         });
         this.bot.addReconnectListener(listener -> {
-            LogSystem.log(getPrefix() + " reconnecting", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log(getPrefix(), "reconnecting", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
         });
         this.bot.addResumeListener(listener -> {
-            LogSystem.log(getPrefix() + " resuming", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log(getPrefix(), "resuming", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
         });
     }
     public void connect(){

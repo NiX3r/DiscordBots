@@ -8,7 +8,7 @@ public class Challenger extends BotExtend {
     public Challenger(String token){
         setToken(token);
         setPrefix("nChallenger");
-        LogSystem.log(getPrefix() + " instance created", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log(getPrefix(), "instance created", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
     }
 
 }

@@ -1,7 +1,5 @@
 package eu.ncodes.discordbot.bots.supporter.instances;
 
-import java.sql.Timestamp;
-import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

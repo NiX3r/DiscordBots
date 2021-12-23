@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-public class FileLog {
+public class FileUtils {
 
     public static void saveLog(nSupport support, Consumer<Exception> consumer){
 
@@ -34,11 +34,11 @@ public class FileLog {
             f_writer.write(new GsonBuilder().setPrettyPrinting().create().toJson(support));
             f_writer.flush();
             f_writer.close();
-            LogSystem.log(DiscordUtils.supporter.getPrefix() + " log '" + support.getId() + "-" + support.getOwnerName() + "' saved", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log(DiscordUtils.supporter.getPrefix(), "log '" + support.getId() + "-" + support.getOwnerName() + "' saved", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
             consumer.accept(null);
 
         } catch (IOException e) {
-            LogSystem.log(DiscordUtils.supporter.getPrefix() + " can't save ticket log '" + support.getId() + "-" + support.getOwnerName() + "' saved. Error: " + e.getMessage(), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log(DiscordUtils.supporter.getPrefix(), "can't save ticket log '" + support.getId() + "-" + support.getOwnerName() + "' saved. Error: " + e.getMessage(), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
             e.printStackTrace();
             consumer.accept(e);
         }
@@ -58,10 +58,10 @@ public class FileLog {
             f_writer.write(json);
             f_writer.flush();
             f_writer.close();
-            LogSystem.log("Supporter cache saved", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log("nSupporter", "cache saved", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
             consumer.accept(null);
         } catch (Exception e){
-            LogSystem.log("Supporter can't save cache. Error: " + e.getMessage(), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log("nSupporter", "can't save cache. Error: " + e.getMessage(), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
             e.printStackTrace();
             consumer.accept(e);
         }
@@ -75,10 +75,10 @@ public class FileLog {
         try{
             String json = new String(Files.readAllBytes(Paths.get(path)));
             ArrayList<nSupport> sList = new ArrayList<nSupport>(Arrays.asList(new Gson().fromJson(json, nSupport[].class)));
-            LogSystem.log("Supporter cache loaded", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log("nSupporter", "cache loaded", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
             consumer.accept(sList);
         } catch (Exception e){
-            LogSystem.log("Supporter can't load cache. Error: " + e.getMessage(), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log("nSupporter", "can't load cache. Error: " + e.getMessage(), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
             e.printStackTrace();
             consumer.accept(null);
         }

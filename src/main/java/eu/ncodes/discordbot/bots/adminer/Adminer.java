@@ -8,7 +8,7 @@ public class Adminer extends BotExtend {
     public Adminer(String token){
         setToken(token);
         setPrefix("nAdminer");
-        LogSystem.log(getPrefix() + " instance created", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log(getPrefix(), "instance created", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
     }
 
 }

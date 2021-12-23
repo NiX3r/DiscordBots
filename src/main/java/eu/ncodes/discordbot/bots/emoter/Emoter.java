@@ -8,7 +8,7 @@ public class Emoter extends BotExtend {
     public Emoter(String token){
         setToken(token);
         setPrefix("nEmoter");
-        LogSystem.log(getPrefix() + " instance created", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log(getPrefix(), "instance created", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
     }
 
 }

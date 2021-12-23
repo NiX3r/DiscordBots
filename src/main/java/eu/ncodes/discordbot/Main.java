@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        LogSystem.log("Program started. Initializing...", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log("PROGRAM", "Program started. Initializing...", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
         DiscordUtils.supporter = new Supporter(DiscordTokens.getSupporter(), true);
         DiscordUtils.adminer = new Adminer(DiscordTokens.getAdminer());
@@ -31,7 +31,7 @@ public class Main {
         DiscordUtils.player.initializeBot();
         DiscordUtils.tester.initializeBot();
 
-        LogSystem.log("Initialize finished", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log("PROGRAM", "Initialize finished", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 

@@ -3,7 +3,7 @@ package eu.ncodes.discordbot.bots.supporter;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
 import eu.ncodes.discordbot.bots.supporter.listeners.nMessageComponentCreateListener;
 import eu.ncodes.discordbot.bots.supporter.listeners.nMessageCreateListener;
-import eu.ncodes.discordbot.bots.supporter.utils.FileLog;
+import eu.ncodes.discordbot.bots.supporter.utils.FileUtils;
 import eu.ncodes.discordbot.nextends.BotExtend;
 import eu.ncodes.discordbot.utils.DiscordUtils;
 import eu.ncodes.discordbot.utils.LogSystem;
@@ -19,12 +19,12 @@ public class Supporter extends BotExtend {
 
     public Supporter(String token, boolean loadCache){
         setToken(token);
-        setPrefix("Supporter");
+        setPrefix("nSupporter");
 
         supportIndex = 0;
 
         if(loadCache){
-            FileLog.loadCache(cache ->{
+            FileUtils.loadCache(cache ->{
                 if(cache == null)
                     this.supports = new ArrayList<nSupport>();
                 else
@@ -34,7 +34,7 @@ public class Supporter extends BotExtend {
         else {
             this.supports = new ArrayList<nSupport>();
         }
-        LogSystem.log("Supporter instance created", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log("nSupporter", " instance created", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
     }
 
     @Override
@@ -49,11 +49,11 @@ public class Supporter extends BotExtend {
         String status = this.getSupports().size() == 1 ? (this.getSupports().size() + " ticket") : (this.getSupports().size() + " tickets");
         this.getBot().updateActivity(ActivityType.WATCHING, status);
 
-        LogSystem.log(DiscordUtils.supporter.getPrefix() + " bot initialize and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log(DiscordUtils.supporter.getPrefix(), "bot initialize and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
     }
     public void saveCache(){
-        FileLog.saveCache(callback -> {
+        FileUtils.saveCache(callback -> {
             if(callback != null){
                 System.out.println("Cannot save cache into file!");
             }

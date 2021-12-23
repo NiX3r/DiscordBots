@@ -3,14 +3,13 @@ package eu.ncodes.discordbot.bots.supporter.listeners;
 import com.google.gson.Gson;
 import eu.ncodes.discordbot.bots.supporter.instances.nMessage;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
-import eu.ncodes.discordbot.bots.supporter.utils.FileLog;
+import eu.ncodes.discordbot.bots.supporter.utils.FileUtils;
 import eu.ncodes.discordbot.utils.DiscordDefaults;
 import eu.ncodes.discordbot.utils.DiscordUtils;
 import eu.ncodes.discordbot.utils.LogSystem;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.channel.TextChannel;
-import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageAttachment;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
@@ -19,7 +18,6 @@ import org.javacord.api.entity.message.component.SelectMenu;
 import org.javacord.api.entity.message.component.SelectMenuOption;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.permission.Permissions;
-import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
@@ -61,13 +59,13 @@ public class nMessageCreateListener implements MessageCreateListener {
                 Checks if it's message subcommand
             */
             if(splitter[1].equals("msg") || splitter[1].equals("message")){
-                LogSystem.log(DiscordUtils.supporter.getPrefix() + " message command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.supporter.getPrefix(), "message command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 /*
                     Checks if command contains 1 mention channel
                 */
                 if(event.getMessage().getMentionedChannels().size() == 1){
                     onCreateMessage(event.getMessage().getMentionedChannels().get(0));
-                    LogSystem.log(DiscordUtils.supporter.getPrefix() + " end of message command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                    LogSystem.log(DiscordUtils.supporter.getPrefix(), "end of message command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 }
                 event.getMessage().reply("You have to mention 1 text channel!");
             }
@@ -76,7 +74,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                 Checks if it's member subcommand
             */
             else if(splitter[1].equals("member") && (splitter[2].equals("add") || splitter[2].equals("remove")) && splitter.length == 4){
-                LogSystem.log(DiscordUtils.supporter.getPrefix() + " member add/remove catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.supporter.getPrefix(), "member add/remove catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 /*
                     Checks if sender has Support role or has AT member role
                 */
@@ -84,7 +82,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                         DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAtMember)){
 
                     onMember(event, splitter[2], splitter[3]);
-                    LogSystem.log(DiscordUtils.supporter.getPrefix() + " end of member command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                    LogSystem.log(DiscordUtils.supporter.getPrefix(), "end of member command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
                 }
             }
@@ -93,14 +91,14 @@ public class nMessageCreateListener implements MessageCreateListener {
                 Checks if it's close subcommand
             */
             else if(splitter[1].equals("close")){
-                LogSystem.log(DiscordUtils.supporter.getPrefix() + " close command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.supporter.getPrefix(), "close command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 /*
                     Checks if sender has Support role or has AT member role
                 */
                 if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleSupport) ||
                         DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAtMember)){
                     onClose(event);
-                    LogSystem.log(DiscordUtils.supporter.getPrefix() + " end of close command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                    LogSystem.log(DiscordUtils.supporter.getPrefix(), "end of close command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 }
             }
 
@@ -108,13 +106,13 @@ public class nMessageCreateListener implements MessageCreateListener {
                 Checks if it's cache subcommand
             */
             else if(splitter[1].equals("cache")){
-                LogSystem.log(DiscordUtils.supporter.getPrefix() + " cache command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.supporter.getPrefix(), "cache command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 /*
                     Checks if sender has Admin role
                 */
                 if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAdmin)){
                     onCache(event.getMessage().getChannel());
-                    LogSystem.log(DiscordUtils.supporter.getPrefix() + " end of cache command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                    LogSystem.log(DiscordUtils.supporter.getPrefix(), "end of cache command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 }
             }
 
@@ -131,7 +129,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                         !event.getMessageAuthor().isBotUser()){
 
                     onTicketMessage(event);
-                    LogSystem.log(DiscordUtils.supporter.getPrefix() + " ticket message from '" + event.getMessageAuthor().getName() + "' saved", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                    LogSystem.log(DiscordUtils.supporter.getPrefix(), "ticket message from '" + event.getMessageAuthor().getName() + "' saved", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
                 }
 
@@ -226,7 +224,7 @@ public class nMessageCreateListener implements MessageCreateListener {
 
         nSupport support = DiscordUtils.supporter.getSupportById(id);
         event.getMessageAuthor().asUser().get().removeRole(event.getServer().get().getRoleById(DiscordDefaults.roleSupport).get());
-        FileLog.saveLog(support, error -> {
+        FileUtils.saveLog(support, error -> {
 
             if(error == null){
 

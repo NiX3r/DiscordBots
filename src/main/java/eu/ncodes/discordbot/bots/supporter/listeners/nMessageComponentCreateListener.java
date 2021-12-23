@@ -35,12 +35,12 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
             case "ncodes-support-list":
                 types.put(messageComponentInteraction.getUser().getId(), messageComponentInteraction.asSelectMenuInteraction().get().getChosenOptions().get(0).getLabel());
                 messageComponentInteraction.asSelectMenuInteraction().get().acknowledge();
-                LogSystem.log(DiscordUtils.supporter.getPrefix() + " user '" + messageComponentInteraction.getUser().getName() + "' select '" + messageComponentInteraction.asSelectMenuInteraction().get().getChosenOptions().get(0).getLabel() + "' as ticket topic", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.supporter.getPrefix(), "user '" + messageComponentInteraction.getUser().getName() + "' select '" + messageComponentInteraction.asSelectMenuInteraction().get().getChosenOptions().get(0).getLabel() + "' as ticket topic", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 break;
             case "ncodes-support":
                 startSupport(messageComponentInteraction.getServer().get(), messageComponentInteraction.getUser());
                 messageComponentInteraction.asButtonInteraction().get().acknowledge();
-                LogSystem.log(DiscordUtils.supporter.getPrefix() + " start new ticket for '" + messageComponentInteraction.getUser().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.supporter.getPrefix(), "start new ticket for '" + messageComponentInteraction.getUser().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 break;
         }
 

@@ -13,12 +13,12 @@ public class LogSystem {
 
     private static List<String> logs;
 
-    public static void log(String content, int lineNo, String fileName, String methodName){
+    public static void log(String prefix, String content, int lineNo, String fileName, String methodName){
 
         if(logs == null)
             logs = new ArrayList<String>();
 
-        String line = "[" + LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM)) + "] " + fileName + " : " + methodName + "(" + lineNo + ") >> " + content;
+        String line = "[" + LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM)) + "] (" + prefix + ") " + fileName + " : " + methodName + "(" + lineNo + ") >> " + content;
 
         logs.add(line);
         System.out.println(line);
