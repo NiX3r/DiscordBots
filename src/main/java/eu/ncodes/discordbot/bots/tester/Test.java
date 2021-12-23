@@ -1,6 +1,6 @@
-package eu.ncodes.discordbot.bots.test;
+package eu.ncodes.discordbot.bots.tester;
 
-import eu.ncodes.discordbot.bots.test.listeners.PingCommandListener;
+import eu.ncodes.discordbot.bots.tester.listeners.PingCommandListener;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 

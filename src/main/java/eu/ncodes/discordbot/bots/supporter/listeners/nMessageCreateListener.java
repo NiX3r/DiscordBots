@@ -6,6 +6,7 @@ import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
 import eu.ncodes.discordbot.bots.supporter.utils.FileLog;
 import eu.ncodes.discordbot.utils.DiscordDefaults;
 import eu.ncodes.discordbot.utils.DiscordUtils;
+import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
@@ -220,6 +221,8 @@ public class nMessageCreateListener implements MessageCreateListener {
             if(error == null){
 
                 DiscordUtils.supporter.removeSupport(support);
+                String status = DiscordUtils.supporter.getSupports().size() == 1 ? (DiscordUtils.supporter.getSupports().size() + " ticket") : (DiscordUtils.supporter.getSupports().size() + " tickets");
+                DiscordUtils.supporter.getAPI().updateActivity(ActivityType.WATCHING, status);
                 event.getMessage().reply(event.getMessageAuthor().asUser().get().getMentionTag() + ", this channel will now close!");
                 event.getServerTextChannel().get().delete();
 

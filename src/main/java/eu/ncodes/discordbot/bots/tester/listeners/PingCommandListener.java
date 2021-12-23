@@ -1,4 +1,4 @@
-package eu.ncodes.discordbot.bots.test.listeners;
+package eu.ncodes.discordbot.bots.tester.listeners;
 
 import org.javacord.api.event.message.MessageCreateEvent;
 

@@ -3,11 +3,13 @@ package eu.ncodes.discordbot.bots.supporter.listeners;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
 import eu.ncodes.discordbot.utils.DiscordDefaults;
 import eu.ncodes.discordbot.utils.DiscordUtils;
+import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.permission.Permissions;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.entity.user.UserStatus;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.interaction.MessageComponentInteraction;
 import org.javacord.api.listener.interaction.MessageComponentCreateListener;
@@ -64,8 +66,9 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
 
         nSupport support = new nSupport(DiscordUtils.supporter.getSupportsIndex(), id, user.getId(), user.getName(), types.get(user.getId()));
         DiscordUtils.supporter.addSupport(support);
-        types.remove(user.getId());
         DiscordUtils.supporter.incrementSupportsIndex();
+        String status = DiscordUtils.supporter.getSupports().size() == 1 ? (DiscordUtils.supporter.getSupports().size() + " ticket") : (DiscordUtils.supporter.getSupports().size() + " tickets");
+        DiscordUtils.supporter.getAPI().updateActivity(ActivityType.WATCHING, status);
 
         EmbedBuilder builder = new EmbedBuilder()
                 .setColor(Color.decode("#7900FF"))
