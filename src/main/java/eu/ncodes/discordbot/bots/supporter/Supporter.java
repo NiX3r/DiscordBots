@@ -3,29 +3,24 @@ package eu.ncodes.discordbot.bots.supporter;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
 import eu.ncodes.discordbot.bots.supporter.listeners.nMessageComponentCreateListener;
 import eu.ncodes.discordbot.bots.supporter.listeners.nMessageCreateListener;
-import eu.ncodes.discordbot.bots.supporter.utils.Defaults;
 import eu.ncodes.discordbot.bots.supporter.utils.FileLog;
 import eu.ncodes.discordbot.nextends.BotExtend;
 import eu.ncodes.discordbot.utils.DiscordUtils;
-import org.javacord.api.DiscordApi;
+import eu.ncodes.discordbot.utils.LogSystem;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
-import org.javacord.api.entity.permission.Permissions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Supporter extends BotExtend {
 
-    private String token;
-    private DiscordApi bot;
     private int supportIndex;
     private ArrayList<nSupport> supports;
 
-    private final String prefix = "Supporter";
-
     public Supporter(String token, boolean loadCache){
-        this.token = token;
+        setToken(token);
+        setPrefix("Supporter");
+
         supportIndex = 0;
 
         if(loadCache){
@@ -39,18 +34,22 @@ public class Supporter extends BotExtend {
         else {
             this.supports = new ArrayList<nSupport>();
         }
+        LogSystem.log("Supporter instance created", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
     }
 
     @Override
     public void initializeBot(){
 
-        this.bot = new DiscordApiBuilder().setToken(this.token).setAllIntents().login().join();
+        setBot(new DiscordApiBuilder().setToken(getToken()).setAllIntents().login().join());
 
-        this.bot.addMessageCreateListener(new nMessageCreateListener());
-        this.bot.addMessageComponentCreateListener(new nMessageComponentCreateListener());
+        getBot().addMessageCreateListener(new nMessageCreateListener());
+        getBot().addMessageComponentCreateListener(new nMessageComponentCreateListener());
+        initializeLogListeners();
 
         String status = this.getSupports().size() == 1 ? (this.getSupports().size() + " ticket") : (this.getSupports().size() + " tickets");
-        this.getAPI().updateActivity(ActivityType.WATCHING, status);
+        this.getBot().updateActivity(ActivityType.WATCHING, status);
+
+        LogSystem.log(DiscordUtils.supporter.getPrefix() + " bot initialize and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
     }
     public void saveCache(){
@@ -66,9 +65,6 @@ public class Supporter extends BotExtend {
     }
     public void removeSupport(nSupport support){ this.supports.remove(support); }
 
-    public DiscordApi getAPI(){
-        return this.bot;
-    }
     public int getSupportsIndex(){ return this.supportIndex; }
     public ArrayList<nSupport> getSupports() { return this.supports; }
     public nSupport getSupportById(int id){

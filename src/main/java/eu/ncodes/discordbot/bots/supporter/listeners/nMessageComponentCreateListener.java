@@ -3,6 +3,7 @@ package eu.ncodes.discordbot.bots.supporter.listeners;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
 import eu.ncodes.discordbot.utils.DiscordDefaults;
 import eu.ncodes.discordbot.utils.DiscordUtils;
+import eu.ncodes.discordbot.utils.LogSystem;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -34,19 +35,14 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
             case "ncodes-support-list":
                 types.put(messageComponentInteraction.getUser().getId(), messageComponentInteraction.asSelectMenuInteraction().get().getChosenOptions().get(0).getLabel());
                 messageComponentInteraction.asSelectMenuInteraction().get().acknowledge();
+                LogSystem.log(DiscordUtils.supporter.getPrefix() + " user '" + messageComponentInteraction.getUser().getName() + "' select '" + messageComponentInteraction.asSelectMenuInteraction().get().getChosenOptions().get(0).getLabel() + "' as ticket topic", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 break;
             case "ncodes-support":
                 startSupport(messageComponentInteraction.getServer().get(), messageComponentInteraction.getUser());
                 messageComponentInteraction.asButtonInteraction().get().acknowledge();
+                LogSystem.log(DiscordUtils.supporter.getPrefix() + " start new ticket for '" + messageComponentInteraction.getUser().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 break;
         }
-
-        // This must be here. We don't know why,
-        // but if it's not here Discord will show
-        // user some kind of error message. Due it
-        // it's here forever. Sorry future me!
-        //event.getMessageComponentInteraction().createImmediateResponder().respond();
-        return;
 
     }
 
@@ -61,14 +57,13 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
                 .addPermissionOverwrite(user, Permissions.fromBitmask(1024))
                 .create().join().getId();
 
-
         user.addRole(server.getRoleById(DiscordDefaults.roleSupport).get());
 
         nSupport support = new nSupport(DiscordUtils.supporter.getSupportsIndex(), id, user.getId(), user.getName(), types.get(user.getId()));
         DiscordUtils.supporter.addSupport(support);
         DiscordUtils.supporter.incrementSupportsIndex();
         String status = DiscordUtils.supporter.getSupports().size() == 1 ? (DiscordUtils.supporter.getSupports().size() + " ticket") : (DiscordUtils.supporter.getSupports().size() + " tickets");
-        DiscordUtils.supporter.getAPI().updateActivity(ActivityType.WATCHING, status);
+        DiscordUtils.supporter.getBot().updateActivity(ActivityType.WATCHING, status);
 
         EmbedBuilder builder = new EmbedBuilder()
                 .setColor(Color.decode("#7900FF"))

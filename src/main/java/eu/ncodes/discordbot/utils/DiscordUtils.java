@@ -6,6 +6,7 @@ import eu.ncodes.discordbot.bots.emoter.Emoter;
 import eu.ncodes.discordbot.bots.player.Player;
 import eu.ncodes.discordbot.bots.supporter.Supporter;
 import eu.ncodes.discordbot.bots.tester.Tester;
+import org.apache.logging.log4j.Logger;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 
