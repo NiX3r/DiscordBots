@@ -10,15 +10,12 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.permission.Permissions;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
-import org.javacord.api.entity.user.UserStatus;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.interaction.MessageComponentInteraction;
 import org.javacord.api.listener.interaction.MessageComponentCreateListener;
 
 import java.awt.*;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.FormatStyle;
 import java.util.HashMap;
 

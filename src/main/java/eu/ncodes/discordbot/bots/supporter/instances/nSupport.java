@@ -3,7 +3,6 @@ package eu.ncodes.discordbot.bots.supporter.instances;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class nSupport {
 
