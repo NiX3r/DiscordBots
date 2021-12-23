@@ -1,5 +1,6 @@
 package eu.ncodes.discordbot.nextends;
 
+import eu.ncodes.discordbot.utils.LogSystem;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.permission.Permissions;
@@ -12,7 +13,7 @@ public class BotExtend {
 
     public void initializeBot(){
         this.bot = new DiscordApiBuilder().setToken(this.token).setAllIntents().login().join();
-        System.out.println(this.prefix + " > Connection URL: " + this.bot.createBotInvite(Permissions.fromBitmask(8)));
+        LogSystem.log(getPrefix() + " bot initialized and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
     }
     public void connect(){
         this.disconnect();

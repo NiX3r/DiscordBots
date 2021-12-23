@@ -9,10 +9,13 @@ import eu.ncodes.discordbot.bots.tester.Tester;
 import eu.ncodes.discordbot.threads.ShutdownThread;
 import eu.ncodes.discordbot.utils.DiscordTokens;
 import eu.ncodes.discordbot.utils.DiscordUtils;
+import eu.ncodes.discordbot.utils.LogSystem;
 
 public class Main {
 
     public static void main(String[] args) {
+
+        LogSystem.log("Program started. Initializing...", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
         DiscordUtils.supporter = new Supporter(DiscordTokens.getSupporter(), true);
         DiscordUtils.adminer = new Adminer(DiscordTokens.getAdminer());
@@ -27,6 +30,8 @@ public class Main {
         DiscordUtils.emoter.initializeBot();
         DiscordUtils.player.initializeBot();
         DiscordUtils.tester.initializeBot();
+
+        LogSystem.log("Initialize finished", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 

@@ -53,7 +53,6 @@ public class FileLog {
                     = new BufferedWriter(new FileWriter(
                     path + "/cache.json"));
             String json = new GsonBuilder().setPrettyPrinting().create().toJson(DiscordUtils.supporter.getSupports());
-            System.out.println(json);
             f_writer.write(json);
             f_writer.flush();
             f_writer.close();
