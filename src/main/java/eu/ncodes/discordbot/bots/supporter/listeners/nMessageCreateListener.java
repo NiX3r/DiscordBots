@@ -154,10 +154,10 @@ public class nMessageCreateListener implements MessageCreateListener {
                 .setTitle("Ticket System :tickets: ")
                 .setDescription("Hi! :wave: \nDon't be shy and open new ticket by pressing a button below!")
                 .addField("Rule #1", "Don't abuse ticket system")
-                .addField("Rule #2", "After create ticket try to most specify your problem")
+                .addField("Rule #2", "After creating the ticket try to specify your problem")
                 .addField("To add member into ticket", "n!s member add <user id>")
                 .addField("To close ticket", "n!s close")
-                .setFooter("Discord is in beta version!");
+                .setFooter("Please be patient, @nSupport is still in progress!");
 
         new MessageBuilder()
                 .setEmbed(builder)
