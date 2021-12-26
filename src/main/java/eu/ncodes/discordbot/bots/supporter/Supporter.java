@@ -9,6 +9,7 @@ import eu.ncodes.discordbot.utils.DiscordUtils;
 import eu.ncodes.discordbot.utils.LogSystem;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
+import org.javacord.api.entity.permission.Permissions;
 
 import java.util.ArrayList;
 
@@ -41,6 +42,7 @@ public class Supporter extends BotExtend {
     public void initializeBot(){
 
         setBot(new DiscordApiBuilder().setToken(getToken()).setAllIntents().login().join());
+        LogSystem.log(getPrefix(), "bot is ready on : " + getBot().createBotInvite(Permissions.fromBitmask(8)), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
         getBot().addMessageCreateListener(new nMessageCreateListener());
         getBot().addMessageComponentCreateListener(new nMessageComponentCreateListener());
@@ -55,7 +57,7 @@ public class Supporter extends BotExtend {
     public void saveCache(){
         FileUtils.saveCache(callback -> {
             if(callback != null){
-                System.out.println("Cannot save cache into file!");
+                LogSystem.log(DiscordUtils.supporter.getPrefix(), "cannot save cache file", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
             }
         });
     }

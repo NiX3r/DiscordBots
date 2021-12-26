@@ -9,6 +9,7 @@ public class ShutdownThread extends Thread{
     public void run(){
 
         DiscordUtils.supporter.saveCache();
+        DiscordUtils.emoter.saveCache();
         LogSystem.log("PROGRAM", "Closing program", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
         LogSystem.saveLogs();
 

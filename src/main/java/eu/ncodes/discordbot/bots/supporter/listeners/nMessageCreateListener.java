@@ -61,13 +61,18 @@ public class nMessageCreateListener implements MessageCreateListener {
             if(splitter[1].equals("msg") || splitter[1].equals("message")){
                 LogSystem.log(DiscordUtils.supporter.getPrefix(), "message command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 /*
-                    Checks if command contains 1 mention channel
+                    Checks if sender has admin role
                 */
-                if(event.getMessage().getMentionedChannels().size() == 1){
-                    onCreateMessage(event.getMessage().getMentionedChannels().get(0));
-                    LogSystem.log(DiscordUtils.supporter.getPrefix(), "end of message command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAdmin)){
+                    /*
+                    Checks if command contains 1 mention channel
+                    */
+                    if(event.getMessage().getMentionedChannels().size() == 1){
+                        onCreateMessage(event.getMessage().getMentionedChannels().get(0));
+                        LogSystem.log(DiscordUtils.supporter.getPrefix(), "end of message command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                    }
+                    event.getMessage().reply("You have to mention 1 text channel!");
                 }
-                event.getMessage().reply("You have to mention 1 text channel!");
             }
 
             /*
@@ -165,7 +170,8 @@ public class nMessageCreateListener implements MessageCreateListener {
                         ActionRow.of(SelectMenu.create("ncodes-support-list", "Please select topic of ticket", 1, 1,
                                 Arrays.asList(
                                         SelectMenuOption.create("Idea", "Selected topic : idea", "Select if you have some idea to discuss"),
-                                        SelectMenuOption.create("Bug", "Selected topic : bug", "Select if you found some bug to discuss")
+                                        SelectMenuOption.create("Bug", "Selected topic : bug", "Select if you found some bug to discuss"),
+                                        SelectMenuOption.create("Question", "Selected topic: question", "Select if you have some question to discuss")
                                 ))),
                         ActionRow.of(Button.success("ncodes-support", "Start a ticket"))
                 )
@@ -228,6 +234,11 @@ public class nMessageCreateListener implements MessageCreateListener {
 
             if(error == null){
 
+                event.getServer().get().getMemberById(support.getOwnerId()).ifPresent(user -> {
+                    event.getServer().get().getRoleById(DiscordDefaults.roleSupport).ifPresent(role -> {
+                        user.removeRole(role);
+                    });
+                });
                 DiscordUtils.supporter.removeSupport(support);
                 String status = DiscordUtils.supporter.getSupports().size() == 1 ? (DiscordUtils.supporter.getSupports().size() + " ticket") : (DiscordUtils.supporter.getSupports().size() + " tickets");
                 DiscordUtils.supporter.getBot().updateActivity(ActivityType.WATCHING, status);
@@ -283,7 +294,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                 System.out.println(file.length);
                 fileName = attachment.getFileName();
                 key = fileName.substring(0, fileName.indexOf("."));
-                String path = "./logs/" + support.getCreated().getYear() + "/" + support.getCreated().getMonthValue() + "/" + support.getCreated().getDayOfMonth() + "/" + support.getId() + "-" + support.getOwnerName();
+                String path = "./data/supporter/" + support.getCreated().getYear() + "/" + support.getCreated().getMonthValue() + "/" + support.getCreated().getDayOfMonth() + "/" + support.getId() + "-" + support.getOwnerName();
 
                 new File(path).mkdirs();
 

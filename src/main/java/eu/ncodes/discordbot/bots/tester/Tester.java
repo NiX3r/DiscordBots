@@ -5,6 +5,7 @@ import eu.ncodes.discordbot.nextends.BotExtend;
 import eu.ncodes.discordbot.utils.LogSystem;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.permission.Permissions;
 
 public class Tester extends BotExtend {
 
@@ -17,6 +18,8 @@ public class Tester extends BotExtend {
     @Override
     public void initializeBot(){
         setBot(new DiscordApiBuilder().setToken(getToken()).login().join());
+        LogSystem.log(getPrefix(), "bot is ready on : " + getBot().createBotInvite(Permissions.fromBitmask(8)), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+
         getBot().addMessageCreateListener(event -> PingCommandListener.On(event));
         initializeLogListeners();
         LogSystem.log(getPrefix(), "bot initialized and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());

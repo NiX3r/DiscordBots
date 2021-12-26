@@ -10,7 +10,4 @@ public class DiscordDefaults {
     public static String categorySupport = "852878611378995230";
     public static String channelWelcome = "611985124057284621";
 
-    public static String emojiWaitingAT = EmojiParser.parseToUnicode(":blue_book:");
-    public static String emojiWaitingUser = EmojiParser.parseToUnicode(":green_book:");
-
 }

@@ -20,7 +20,7 @@ public class Main {
         DiscordUtils.supporter = new Supporter(DiscordTokens.getSupporter(), true);
         DiscordUtils.adminer = new Adminer(DiscordTokens.getAdminer());
         DiscordUtils.challenger = new Challenger(DiscordTokens.getChallanger());
-        DiscordUtils.emoter = new Emoter(DiscordTokens.getEmoter());
+        DiscordUtils.emoter = new Emoter(DiscordTokens.getEmoter(), true);
         DiscordUtils.player = new Player(DiscordTokens.getPlayer());
         DiscordUtils.tester = new Tester(DiscordTokens.getTester());
 

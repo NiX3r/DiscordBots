@@ -13,6 +13,7 @@ public class BotExtend {
 
     public void initializeBot(){
         this.bot = new DiscordApiBuilder().setToken(this.token).setAllIntents().login().join();
+        LogSystem.log(getPrefix(), "bot is ready on : " + this.bot.createBotInvite(Permissions.fromBitmask(8)), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
         initializeLogListeners();
         LogSystem.log(getPrefix(), "bot initialized and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
     }
