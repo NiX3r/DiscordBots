@@ -35,9 +35,6 @@ public class BotUtils {
         else if(DiscordUtils.challenger.getBot().getYourself().getIdAsString().equals(id)){
             return DiscordUtils.challenger;
         }
-        else if(DiscordUtils.adminer.getBot().getYourself().getIdAsString().equals(id)){
-            return DiscordUtils.adminer;
-        }
         else{
             return null;
         }

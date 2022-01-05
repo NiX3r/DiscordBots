@@ -2,9 +2,6 @@ package eu.ncodes.discordbot.bots.adminer.listeners;
 
 import com.google.gson.Gson;
 import eu.ncodes.discordbot.bots.adminer.utils.BotUtils;
-import eu.ncodes.discordbot.bots.supporter.instances.nMessage;
-import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
-import eu.ncodes.discordbot.bots.supporter.utils.FileUtils;
 import eu.ncodes.discordbot.nextends.BotExtend;
 import eu.ncodes.discordbot.utils.DiscordDefaults;
 import eu.ncodes.discordbot.utils.DiscordUtils;
@@ -12,6 +9,7 @@ import eu.ncodes.discordbot.utils.LogSystem;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageAttachment;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
@@ -61,7 +59,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                 Checks if it's message subcommand
             */
             if(splitter[1].equals("r") || splitter[1].equals("reload")){
-                LogSystem.log(DiscordUtils.supporter.getPrefix(), "reload command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.adminer.getPrefix(), "reload command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 /*
                     Checks if sender has admin role
                 */
@@ -77,7 +75,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                                 return;
                             }
                             onReload(bot);
-                            LogSystem.log(DiscordUtils.supporter.getPrefix(), "end of reload command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                            LogSystem.log(DiscordUtils.adminer.getPrefix(), "end of reload command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                             return;
                         }
                     }
@@ -86,16 +84,81 @@ public class nMessageCreateListener implements MessageCreateListener {
             }
 
             /*
+                Checks if it's on subcommand
+            */
+            else if(splitter[1].equals("on")){
+                LogSystem.log(DiscordUtils.adminer.getPrefix(), "on command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                /*
+                    Checks if sender has admin role
+                */
+                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAdmin)){
+                    /*
+                    Checks if command contains 1 mention channel
+                    */
+                    if(event.getMessage().getMentionedUsers().size() == 1){
+                        if(BotUtils.hasnCodesAIRole(event.getServer().get(), event.getMessage().getMentionedUsers().get(0))){
+                            BotExtend bot = BotUtils.getBotById(event.getMessage().getMentionedUsers().get(0).getIdAsString());
+                            if(bot == null){
+                                event.getMessage().reply("You have to mention nCodes bot");
+                                return;
+                            }
+                            onOn(bot);
+                            LogSystem.log(DiscordUtils.adminer.getPrefix(), "end of on command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                            return;
+                        }
+                    }
+                    event.getMessage().reply("You have to mention 1 user!");
+                }
+
+            }
+
+            else if(splitter[1].equals("off")){
+                LogSystem.log(DiscordUtils.adminer.getPrefix(), "off command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                /*
+                    Checks if sender has admin role
+                */
+                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAdmin)){
+                    /*
+                    Checks if command contains 1 mention channel
+                    */
+                    if(event.getMessage().getMentionedUsers().size() == 1){
+                        if(BotUtils.hasnCodesAIRole(event.getServer().get(), event.getMessage().getMentionedUsers().get(0))){
+                            BotExtend bot = BotUtils.getBotById(event.getMessage().getMentionedUsers().get(0).getIdAsString());
+                            if(bot == null){
+                                event.getMessage().reply("You have to mention nCodes bot");
+                                return;
+                            }
+                            onOff(bot);
+                            LogSystem.log(DiscordUtils.adminer.getPrefix(), "end of off command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                            return;
+                        }
+                    }
+                    event.getMessage().reply("You have to mention 1 user!");
+                }
+            }
+
+            else if(splitter[1].equals("status") || splitter[1].equals("ping")){
+                LogSystem.log(DiscordUtils.adminer.getPrefix(), "ping command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                /*
+                    Checks if sender has admin role
+                */
+                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAdmin)){
+                    onPing(event.getMessage());
+                    LogSystem.log(DiscordUtils.adminer.getPrefix(), "end of ping command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                }
+            }
+
+            /*
                 Checks if it's cache subcommand
             */
             else if(splitter[1].equals("cache")){
-                LogSystem.log(DiscordUtils.supporter.getPrefix(), "cache command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.adminer.getPrefix(), "cache command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 /*
                     Checks if sender has Admin role
                 */
                 if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAdmin)){
                     onCache(event.getMessage().getChannel());
-                    LogSystem.log(DiscordUtils.supporter.getPrefix(), "end of cache command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                    LogSystem.log(DiscordUtils.adminer.getPrefix(), "end of cache command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 }
             }
 
@@ -105,7 +168,27 @@ public class nMessageCreateListener implements MessageCreateListener {
     private void onReload(BotExtend bot){
         bot.disconnect();
         bot.initializeBot();
-        LogSystem.log(DiscordUtils.supporter.getPrefix(), "reload done", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log(DiscordUtils.adminer.getPrefix(), "reload done", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+    }
+
+    private void onOn(BotExtend bot){
+        bot.connect();
+        LogSystem.log(DiscordUtils.adminer.getPrefix(), "turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+    }
+
+    private void onOff(BotExtend bot){
+        bot.disconnect();
+        LogSystem.log(DiscordUtils.adminer.getPrefix(), "turned off", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+    }
+
+    private void onPing(Message message){
+        DiscordUtils.adminer.getBot().getMessageById(message.getId(), message.getChannel()).join().reply("Ready to serve, sir!");
+        DiscordUtils.challenger.replyMessage(message.getServer().get().getId(), message.getChannel().getId(), message.getId(), "Ready to serve, sir!");
+        DiscordUtils.supporter.replyMessage(message.getServer().get().getId(), message.getChannel().getId(), message.getId(), "Ready to serve, sir!");
+        DiscordUtils.emoter.replyMessage(message.getServer().get().getId(), message.getChannel().getId(), message.getId(), "Ready to serve, sir!");
+        DiscordUtils.player.replyMessage(message.getServer().get().getId(), message.getChannel().getId(), message.getId(), "Ready to serve, sir!");
+        DiscordUtils.tester.replyMessage(message.getServer().get().getId(), message.getChannel().getId(), message.getId(), "Ready to serve, sir!");
+        LogSystem.log(DiscordUtils.adminer.getPrefix(), "bots ponged", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
     }
 
     /*

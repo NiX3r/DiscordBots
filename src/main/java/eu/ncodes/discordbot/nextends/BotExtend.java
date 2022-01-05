@@ -3,6 +3,7 @@ package eu.ncodes.discordbot.nextends;
 import eu.ncodes.discordbot.utils.LogSystem;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.permission.Permissions;
 
 public class BotExtend {
@@ -34,6 +35,15 @@ public class BotExtend {
     }
     public void disconnect(){
         this.bot.disconnect();
+    }
+    public void replyMessage(long serverId, long channelId, long messageId, String message){
+        getBot().getServerById(serverId).ifPresent(server -> {
+            server.getTextChannelById(channelId).ifPresent(channel -> {
+                channel.getMessageById(messageId).thenAccept(msg ->{
+                    msg.reply(message);
+                });
+            });
+        });
     }
 
     public String getToken(){ return this.token; }
