@@ -47,7 +47,7 @@ public class Emoter extends BotExtend {
         getBot().addReactionAddListener(new nReactionAddListener());
         getBot().addReactionRemoveListener(new nReactionRemoveListener());
         getBot().addMessageCreateListener(new nMessageCreateListener());
-        DiscordUtils.emoter.getBot().updateActivity(ActivityType.WATCHING, (DiscordUtils.emoter.getReactionList().size() == 1 ? "1 reaction" : DiscordUtils.emoter.getReactionList().size() + " reactions"));
+        getBot().updateActivity(ActivityType.WATCHING, (getReactionList().size() == 1 ? "1 reaction" : getReactionList().size() + " reactions"));
         LogSystem.log(getPrefix(), "bot initialized and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
     }
