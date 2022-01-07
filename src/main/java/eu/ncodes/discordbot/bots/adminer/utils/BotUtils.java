@@ -20,24 +20,11 @@ public class BotUtils {
     }
 
     public static BotExtend getBotById(String id){
-        if(DiscordUtils.emoter.getBot().getYourself().getIdAsString().equals(id)){
-            return DiscordUtils.emoter;
+        for(String key : DiscordUtils.bots.keySet()){
+            if(DiscordUtils.bots.get(key).getBot().getYourself().getIdAsString().equals(id))
+                return DiscordUtils.bots.get(key);
         }
-        else if(DiscordUtils.supporter.getBot().getYourself().getIdAsString().equals(id)){
-            return DiscordUtils.supporter;
-        }
-        else if(DiscordUtils.player.getBot().getYourself().getIdAsString().equals(id)){
-            return DiscordUtils.player;
-        }
-        else if(DiscordUtils.tester.getBot().getYourself().getIdAsString().equals(id)){
-            return DiscordUtils.tester;
-        }
-        else if(DiscordUtils.challenger.getBot().getYourself().getIdAsString().equals(id)){
-            return DiscordUtils.challenger;
-        }
-        else{
-            return null;
-        }
+        return null;
     }
 
 }

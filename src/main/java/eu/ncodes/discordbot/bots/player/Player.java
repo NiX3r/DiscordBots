@@ -24,7 +24,7 @@ public class Player extends BotExtend {
         getBot().addMessageCreateListener(new nMessageCreateListener());
         initializeLogListeners();
 
-        LogSystem.log(DiscordUtils.supporter.getPrefix(), "bot initialize and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "bot initialize and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
     }
 

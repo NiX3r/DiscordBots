@@ -2,6 +2,7 @@ package eu.ncodes.discordbot.bots.supporter.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import eu.ncodes.discordbot.bots.supporter.Supporter;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
 import eu.ncodes.discordbot.utils.DiscordUtils;
 import eu.ncodes.discordbot.utils.LogSystem;
@@ -33,11 +34,11 @@ public class FileUtils {
             f_writer.write(new GsonBuilder().setPrettyPrinting().create().toJson(support));
             f_writer.flush();
             f_writer.close();
-            LogSystem.log(DiscordUtils.supporter.getPrefix(), "log '" + support.getId() + "-" + support.getOwnerName() + "' saved", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "log '" + support.getId() + "-" + support.getOwnerName() + "' saved", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
             consumer.accept(null);
 
         } catch (IOException e) {
-            LogSystem.log(DiscordUtils.supporter.getPrefix(), "can't save ticket log '" + support.getId() + "-" + support.getOwnerName() + "' saved. Error: " + e.getMessage(), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "can't save ticket log '" + support.getId() + "-" + support.getOwnerName() + "' saved. Error: " + e.getMessage(), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
             e.printStackTrace();
             consumer.accept(e);
         }
@@ -53,7 +54,7 @@ public class FileUtils {
             BufferedWriter f_writer
                     = new BufferedWriter(new FileWriter(
                     path + "/cache.json"));
-            String json = new GsonBuilder().setPrettyPrinting().create().toJson(DiscordUtils.supporter.getSupports());
+            String json = new GsonBuilder().setPrettyPrinting().create().toJson(((Supporter)DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) )).getSupports());
             f_writer.write(json);
             f_writer.flush();
             f_writer.close();

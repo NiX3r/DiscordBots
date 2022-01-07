@@ -1,5 +1,6 @@
 package eu.ncodes.discordbot.bots.supporter.listeners;
 
+import eu.ncodes.discordbot.bots.supporter.Supporter;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
 import eu.ncodes.discordbot.utils.DiscordDefaults;
 import eu.ncodes.discordbot.utils.DiscordUtils;
@@ -32,12 +33,12 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
             case "ncodes-support-list":
                 types.put(messageComponentInteraction.getUser().getId(), messageComponentInteraction.asSelectMenuInteraction().get().getChosenOptions().get(0).getLabel());
                 messageComponentInteraction.asSelectMenuInteraction().get().acknowledge();
-                LogSystem.log(DiscordUtils.supporter.getPrefix(), "user '" + messageComponentInteraction.getUser().getName() + "' select '" + messageComponentInteraction.asSelectMenuInteraction().get().getChosenOptions().get(0).getLabel() + "' as ticket topic", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "user '" + messageComponentInteraction.getUser().getName() + "' select '" + messageComponentInteraction.asSelectMenuInteraction().get().getChosenOptions().get(0).getLabel() + "' as ticket topic", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 break;
             case "ncodes-support":
                 startSupport(messageComponentInteraction.getServer().get(), messageComponentInteraction.getUser());
                 messageComponentInteraction.asButtonInteraction().get().acknowledge();
-                LogSystem.log(DiscordUtils.supporter.getPrefix(), "start new ticket for '" + messageComponentInteraction.getUser().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "start new ticket for '" + messageComponentInteraction.getUser().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 break;
         }
 
@@ -47,7 +48,7 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
 
         long id = server.createTextChannelBuilder()
                 .setCategory(server.getChannelCategoryById(DiscordDefaults.categorySupport).get())
-                .setName(DiscordUtils.supporter.getSupportsIndex() + "-" + user.getName())
+                .setName(((Supporter)DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) )).getSupportsIndex() + "-" + user.getName())
                 .setTopic("**Owner**: *" + user.getName() + "* | **Type**: *" + types.get(user.getId()))
                 .addPermissionOverwrite(server.getEveryoneRole(), Permissions.fromBitmask(0, 1024))
                 .addPermissionOverwrite(server.getRoleById(DiscordDefaults.roleAtMember).get(), Permissions.fromBitmask(1024))
@@ -56,11 +57,12 @@ public class nMessageComponentCreateListener implements MessageComponentCreateLi
 
         user.addRole(server.getRoleById(DiscordDefaults.roleSupport).get());
 
-        nSupport support = new nSupport(DiscordUtils.supporter.getSupportsIndex(), id, user.getId(), user.getName(), types.get(user.getId()));
-        DiscordUtils.supporter.addSupport(support);
-        DiscordUtils.supporter.incrementSupportsIndex();
-        String status = DiscordUtils.supporter.getSupports().size() == 1 ? (DiscordUtils.supporter.getSupports().size() + " ticket") : (DiscordUtils.supporter.getSupports().size() + " tickets");
-        DiscordUtils.supporter.getBot().updateActivity(ActivityType.WATCHING, status);
+        nSupport support = new nSupport(((Supporter)DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) )).getSupportsIndex(), id, user.getId(), user.getName(), types.get(user.getId()));
+        ((Supporter)DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) )).addSupport(support);
+        ((Supporter)DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) )).incrementSupportsIndex();
+        int size =  ((Supporter)DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) )).getSupports().size();
+        String status = size == 1 ? "1 ticket" : size + " tickets";
+        DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getBot().updateActivity(ActivityType.WATCHING, status);
 
         EmbedBuilder builder = new EmbedBuilder()
                 .setColor(Color.decode("#7900FF"))

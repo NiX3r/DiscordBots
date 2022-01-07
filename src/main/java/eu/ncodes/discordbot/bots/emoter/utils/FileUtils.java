@@ -2,6 +2,7 @@ package eu.ncodes.discordbot.bots.emoter.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import eu.ncodes.discordbot.bots.emoter.Emoter;
 import eu.ncodes.discordbot.bots.emoter.instances.nReaction;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
 import eu.ncodes.discordbot.utils.DiscordUtils;
@@ -28,7 +29,7 @@ public class FileUtils {
             BufferedWriter f_writer
                     = new BufferedWriter(new FileWriter(
                     path + "/cache.json"));
-            String json = new GsonBuilder().setPrettyPrinting().create().toJson(DiscordUtils.emoter.getReactionList());
+            String json = new GsonBuilder().setPrettyPrinting().create().toJson(((Emoter)DiscordUtils.bots.get( "emoter" + ( DiscordUtils.isTest ? "-test" : "" ) )).getReactionList());
             f_writer.write(json);
             f_writer.flush();
             f_writer.close();

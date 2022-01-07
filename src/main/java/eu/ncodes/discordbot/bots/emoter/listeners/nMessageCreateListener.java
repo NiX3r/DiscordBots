@@ -1,5 +1,6 @@
 package eu.ncodes.discordbot.bots.emoter.listeners;
 
+import eu.ncodes.discordbot.bots.emoter.Emoter;
 import eu.ncodes.discordbot.bots.emoter.instances.nReaction;
 import eu.ncodes.discordbot.utils.DiscordDefaults;
 import eu.ncodes.discordbot.utils.DiscordUtils;
@@ -30,7 +31,7 @@ public class nMessageCreateListener implements MessageCreateListener {
             Checks if it's nCodes supporter command
         */
         if(splitter[0].equals("n!e")){
-            LogSystem.log(DiscordUtils.emoter.getPrefix(), "command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+            LogSystem.log(DiscordUtils.bots.get( "emoter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
             /*
                 Checks if sender has admin role
@@ -51,12 +52,12 @@ public class nMessageCreateListener implements MessageCreateListener {
                     else
                         reaction.setGiveRole(false);
 
-                    int index = DiscordUtils.emoter.isInListedReaction(splitter[3], event.getMessage().getMentionedChannels().get(0).getId(), Long.valueOf(splitter[5]), event.getMessage().getMentionedRoles().get(0).getId());
+                    int index = ((Emoter)DiscordUtils.bots.get( "emoter" + ( DiscordUtils.isTest ? "-test" : "" ) )).isInListedReaction(splitter[3], event.getMessage().getMentionedChannels().get(0).getId(), Long.valueOf(splitter[5]), event.getMessage().getMentionedRoles().get(0).getId());
                     /*
                         Checks if reaction is in list ? add it : remove it
                     */
                     if(index == -1){
-                        DiscordUtils.emoter.addListedReaction(reaction);
+                        ((Emoter)DiscordUtils.bots.get( "emoter" + ( DiscordUtils.isTest ? "-test" : "" ) )).addListedReaction(reaction);
                         try{
                             event.getServer().get().getTextChannelById(reaction.getChannelId()).get().getMessageById(reaction.getMessageId()).join().addReaction(reaction.getEmoji());
                             event.getServer().get().getTextChannelById(reaction.getChannelId()).get().getMessageById(reaction.getMessageId()).join().addReaction(event.getMessage().getCustomEmojis().get(0));
@@ -64,7 +65,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                         event.getMessage().reply("Reaction successfully added into list.");
                     }
                     else {
-                        DiscordUtils.emoter.removeListedReaction(index);
+                        ((Emoter)DiscordUtils.bots.get( "emoter" + ( DiscordUtils.isTest ? "-test" : "" ) )).removeListedReaction(index);
                         try{
                             event.getServer().get().getTextChannelById(reaction.getChannelId()).get().getMessageById(reaction.getMessageId()).join().removeReactionByEmoji(reaction.getEmoji());
                             event.getServer().get().getTextChannelById(reaction.getChannelId()).get().getMessageById(reaction.getMessageId()).join().removeReactionByEmoji(event.getMessage().getCustomEmojis().get(0));
@@ -72,8 +73,9 @@ public class nMessageCreateListener implements MessageCreateListener {
                         event.getMessage().reply("Reaction successfully removed into list.");
                     }
 
-                    DiscordUtils.emoter.getBot().updateActivity(ActivityType.WATCHING, (DiscordUtils.emoter.getReactionList().size() == 1 ? "1 reaction" : DiscordUtils.emoter.getReactionList().size() + " reactions"));
-                    LogSystem.log(DiscordUtils.emoter.getPrefix(), "end of command by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                    int size = ((Emoter)DiscordUtils.bots.get( "emoter" + ( DiscordUtils.isTest ? "-test" : "" ) )).getReactionList().size();
+                    DiscordUtils.bots.get( "emoter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getBot().updateActivity(ActivityType.WATCHING, (size == 1 ? "1 reaction" : size + " reactions"));
+                    LogSystem.log(DiscordUtils.bots.get( "emoter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "end of command by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
                 }
                 else

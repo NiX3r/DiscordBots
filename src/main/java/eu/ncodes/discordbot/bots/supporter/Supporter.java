@@ -51,13 +51,13 @@ public class Supporter extends BotExtend {
         String status = this.getSupports().size() == 1 ? (this.getSupports().size() + " ticket") : (this.getSupports().size() + " tickets");
         this.getBot().updateActivity(ActivityType.WATCHING, status);
 
-        LogSystem.log(DiscordUtils.supporter.getPrefix(), "bot initialize and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+        LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "bot initialize and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
     }
     public void saveCache(){
         FileUtils.saveCache(callback -> {
             if(callback != null){
-                LogSystem.log(DiscordUtils.supporter.getPrefix(), "cannot save cache file", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "cannot save cache file", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
             }
         });
     }

@@ -55,7 +55,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                 Checks if it's youtube subcommand
             */
             if(splitter[1].equals("ytb") || splitter[1].equals("youtube")){
-                LogSystem.log(DiscordUtils.supporter.getPrefix(), "youtube command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "youtube command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                 /*
                     Checks if sender is in voice channel room
                 */
@@ -63,7 +63,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                     user.getConnectedVoiceChannel(event.getServer().get()).ifPresent(serverVoiceChannel -> {
                         channel = serverVoiceChannel;
                         onPlayYoutube(splitter[2]);
-                        LogSystem.log(DiscordUtils.supporter.getPrefix(), "end of youtube command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
+                        LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "end of youtube command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
                     });
                 });
 
@@ -102,7 +102,7 @@ public class nMessageCreateListener implements MessageCreateListener {
                 playerManager.registerSourceManager(new YoutubeAudioSourceManager());
 
                 // Create an audio source and add it to the audio connection's queue
-                AudioSource source = new LavaplayerAudioSource(DiscordUtils.player.getBot(), player);
+                AudioSource source = new LavaplayerAudioSource(DiscordUtils.bots.get( "players" + ( DiscordUtils.isTest ? "-test" : "" ) ).getBot(), player);
                 audioConnection.setAudioSource(source);
 
                 // You can now use the AudioPlayer like you would normally do with Lavaplayer, e.g.,
