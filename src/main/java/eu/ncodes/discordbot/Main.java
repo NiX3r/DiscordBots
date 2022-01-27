@@ -3,7 +3,6 @@ package eu.ncodes.discordbot;
 import eu.ncodes.discordbot.bots.adminer.Adminer;
 import eu.ncodes.discordbot.bots.challenger.Challenger;
 import eu.ncodes.discordbot.bots.emoter.Emoter;
-import eu.ncodes.discordbot.bots.player.Player;
 import eu.ncodes.discordbot.bots.supporter.Supporter;
 import eu.ncodes.discordbot.bots.tester.Tester;
 import eu.ncodes.discordbot.nextends.BotExtend;
@@ -30,7 +29,6 @@ public class Main {
         DiscordUtils.bots.put("adminer", new Adminer(DiscordTokens.getAdminer()));
         DiscordUtils.bots.put("challenger", new Challenger(DiscordTokens.getChallanger()));
         DiscordUtils.bots.put("emoter", new Emoter(DiscordTokens.getEmoter(), true));
-        DiscordUtils.bots.put("player", new Player(DiscordTokens.getPlayer()));
         DiscordUtils.bots.put("tester", new Tester(DiscordTokens.getTester()));
 
         for(String key : DiscordUtils.bots.keySet()){
