@@ -19,17 +19,38 @@ public class Main {
 
         LogSystem.log("PROGRAM", "Program started. Initializing...", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
-        if(args.length == 1)
-            if(args[0].equals("-test"))
-                DiscordUtils.isTest = true;
-
         DiscordUtils.bots = new HashMap<String, BotExtend>();
-
-        DiscordUtils.bots.put("supporter", new Supporter(DiscordTokens.getSupporter(), true));
-        DiscordUtils.bots.put("adminer", new Adminer(DiscordTokens.getAdminer()));
-        DiscordUtils.bots.put("challenger", new Challenger(DiscordTokens.getChallanger()));
-        DiscordUtils.bots.put("emoter", new Emoter(DiscordTokens.getEmoter(), true));
-        DiscordUtils.bots.put("tester", new Tester(DiscordTokens.getTester()));
+        if(args.length > 1){
+            if(args[0].equals("-test") && args.length > 1){
+                DiscordUtils.isTest = true;
+                for(int i = 1; i < args.length; i++){
+                    switch (args[i]){
+                        case "adminer":
+                            DiscordUtils.bots.put("adminer", new Adminer(DiscordTokens.getAdminer()));
+                            break;
+                        case "supporter":
+                            DiscordUtils.bots.put("supporter", new Supporter(DiscordTokens.getSupporter(), true));
+                            break;
+                        case "emoter":
+                            DiscordUtils.bots.put("emoter", new Emoter(DiscordTokens.getEmoter(), true));
+                            break;
+                        case "challenger":
+                            DiscordUtils.bots.put("challenger", new Challenger(DiscordTokens.getChallanger()));
+                            break;
+                        case "tester":
+                            DiscordUtils.bots.put("tester", new Tester(DiscordTokens.getTester()));
+                            break;
+                    }
+                }
+            }
+        }
+        else {
+            DiscordUtils.bots.put("supporter", new Supporter(DiscordTokens.getSupporter(), true));
+            DiscordUtils.bots.put("adminer", new Adminer(DiscordTokens.getAdminer()));
+            DiscordUtils.bots.put("challenger", new Challenger(DiscordTokens.getChallanger()));
+            DiscordUtils.bots.put("emoter", new Emoter(DiscordTokens.getEmoter(), true));
+            DiscordUtils.bots.put("tester", new Tester(DiscordTokens.getTester()));
+        }
 
         for(String key : DiscordUtils.bots.keySet()){
             DiscordUtils.bots.get(key).initializeBot();
