@@ -3,6 +3,7 @@ package eu.ncodes.discordbot;
 import eu.ncodes.discordbot.bots.adminer.Adminer;
 import eu.ncodes.discordbot.bots.challenger.Challenger;
 import eu.ncodes.discordbot.bots.emoter.Emoter;
+import eu.ncodes.discordbot.bots.giveawayer.Giveawayer;
 import eu.ncodes.discordbot.bots.supporter.Supporter;
 import eu.ncodes.discordbot.bots.tester.Tester;
 import eu.ncodes.discordbot.nextends.BotExtend;
@@ -37,6 +38,9 @@ public class Main {
                         case "challenger":
                             DiscordUtils.bots.put("challenger", new Challenger(DiscordTokens.getChallanger()));
                             break;
+                        case "giveawayer":
+                            DiscordUtils.bots.put("giveawayer", new Giveawayer(DiscordTokens.getGiveawayer(), true));
+                            break;
                         case "tester":
                             DiscordUtils.bots.put("tester", new Tester(DiscordTokens.getTester()));
                             break;
@@ -49,6 +53,7 @@ public class Main {
             DiscordUtils.bots.put("adminer", new Adminer(DiscordTokens.getAdminer()));
             DiscordUtils.bots.put("challenger", new Challenger(DiscordTokens.getChallanger()));
             DiscordUtils.bots.put("emoter", new Emoter(DiscordTokens.getEmoter(), true));
+            DiscordUtils.bots.put("giveawayer", new Giveawayer(DiscordTokens.getGiveawayer(), true));
             DiscordUtils.bots.put("tester", new Tester(DiscordTokens.getTester()));
         }
 
