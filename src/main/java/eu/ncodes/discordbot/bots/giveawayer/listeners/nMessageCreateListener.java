@@ -1,6 +1,7 @@
 package eu.ncodes.discordbot.bots.giveawayer.listeners;
 
 import com.google.gson.Gson;
+import eu.ncodes.discordbot.bots.giveawayer.Giveawayer;
 import eu.ncodes.discordbot.bots.supporter.Supporter;
 import eu.ncodes.discordbot.bots.supporter.instances.nMessage;
 import eu.ncodes.discordbot.bots.supporter.instances.nSupport;
@@ -43,98 +44,16 @@ public class nMessageCreateListener implements MessageCreateListener {
     @Override
     public void onMessageCreate(MessageCreateEvent event) {
 
-        String[] splitter = event.getMessage().getContent().split(" ");
+        if(!event.getMessageAuthor().isBotUser()){
 
-        /*
-            Checks if it's nCodes supporter command
-        */
-        if(splitter[0].equals("n!s")){
+            if(((Giveawayer)DiscordUtils.bots.get("giveawayer")).getCache().IsMemberExists(event.getMessageAuthor().getId())){
 
-            /*
-                Checks if it's message subcommand
-            */
-            if(splitter[1].equals("msg") || splitter[1].equals("message")){
-                LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "message command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
-                /*
-                    Checks if sender has admin role
-                */
-                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAdmin)){
-                    /*
-                    Checks if command contains 1 mention channel
-                    */
-                    if(event.getMessage().getMentionedChannels().size() == 1){
-                        onCreateMessage(event.getMessage().getMentionedChannels().get(0));
-                        LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "end of message command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
-                    }
-                    event.getMessage().reply("You have to mention 1 text channel!");
-                }
-            }
 
-            /*
-                Checks if it's member subcommand
-            */
-            else if(splitter[1].equals("member") && (splitter[2].equals("add") || splitter[2].equals("remove")) && splitter.length == 4){
-                LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "member add/remove catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
-                /*
-                    Checks if sender has Support role or has AT member role
-                */
-                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleSupport) ||
-                        DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAtMember)){
 
-                    onMember(event, splitter[2], splitter[3]);
-                    LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "end of member command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
-
-                }
-            }
-
-            /*
-                Checks if it's close subcommand
-            */
-            else if(splitter[1].equals("close")){
-                LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "close command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
-                /*
-                    Checks if sender has Support role or has AT member role
-                */
-                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleSupport) ||
-                        DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAtMember)){
-                    onClose(event);
-                    LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "end of close command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
-                }
-            }
-
-            /*
-                Checks if it's cache subcommand
-            */
-            else if(splitter[1].equals("cache")){
-                LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "cache command catch by '" + event.getMessageAuthor().getName() + "'", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
-                /*
-                    Checks if sender has Admin role
-                */
-                if(DiscordUtils.hasRole(event.getServer().get(), event.getMessageAuthor().asUser().get(), DiscordDefaults.roleAdmin)){
-                    onCache(event.getMessage().getChannel());
-                    LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "end of cache command", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
-                }
             }
 
         }
-        /*
-            Checks if message isn't supporter command
-        */
-        else{
-            event.getChannel().asServerTextChannel().get().getCategory().ifPresent(channelCategory -> {
-                /*
-                    Checks if channel is in category and sender isn't bot
-                */
-                if(channelCategory.getIdAsString().equals(DiscordDefaults.categorySupport) &&
-                        !event.getMessageAuthor().isBotUser()){
 
-                    onTicketMessage(event);
-                    LogSystem.log(DiscordUtils.bots.get( "supporter" + ( DiscordUtils.isTest ? "-test" : "" ) ).getPrefix(), "ticket message from '" + event.getMessageAuthor().getName() + "' saved", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
-
-                }
-
-            });
-        }
     }
 
     /*
