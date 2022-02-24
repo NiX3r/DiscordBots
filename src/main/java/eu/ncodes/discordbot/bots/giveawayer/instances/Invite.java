@@ -2,25 +2,25 @@ package eu.ncodes.discordbot.bots.giveawayer.instances;
 
 public class Invite {
 
-    private String link;
+    private String code;
     private long owner;
     private int joinCount;
 
-    public Invite(String link, long owner, int joinCount){
-        this.link = link;
+    public Invite(String code, long owner, int joinCount){
+        this.code = code;
         this.owner = owner;
         this.joinCount = joinCount;
     }
 
     // GETTERS
-    public String getLink() {
-        return link;
+    public String getCode() {
+        return this.code;
     }
     public long getOwner() {
-        return owner;
+        return this.owner;
     }
     public int getJoinCount() {
-        return joinCount;
+        return this.joinCount;
     }
 
     public void incrementCount(){
