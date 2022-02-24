@@ -13,14 +13,14 @@ public class Cache {
     public int giveMessagePoints;
     public int giveBoostPoints;
     public int giveInvitePoints;
-    public int giveCallPerMinutePoints;
+    public int giveCallPoints;
 
     public Cache(){
 
         giveMessagePoints = 5;
         giveBoostPoints = 1000;
         giveInvitePoints = 50;
-        giveCallPerMinutePoints = 15;
+        giveCallPoints = 15;
 
     }
 
