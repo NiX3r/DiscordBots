@@ -34,7 +34,7 @@ public class Giveawayer extends BotExtend {
         LogSystem.log(getPrefix(), "bot is ready on : " + getBot().createBotInvite(Permissions.fromBitmask(8)), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
         initializeLogListeners();
         getBot().addMessageCreateListener(new nMessageCreateListener());
-        getBot().updateActivity(ActivityType.WATCHING, cache.GetTotalPoints() + " points");
+        getBot().updateActivity(ActivityType.WATCHING, cache.getTotalPoints() + " points");
         LogSystem.log(getPrefix(), "bot initialized and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
     }

@@ -24,7 +24,7 @@ public class Cache {
 
     }
 
-    public Member GetMemberByUserId(long id){
+    public Member getMemberByUserId(long id){
         for (Member member : this.members){
             if(member.getUserId() == id)
                 return member;
@@ -32,7 +32,7 @@ public class Cache {
         return null;
     }
 
-    public boolean IsMemberExists(long id){
+    public boolean isMemberExists(long id){
         for (Member member : this.members){
             if(member.getUserId() == id)
                 return true;
@@ -40,7 +40,7 @@ public class Cache {
         return false;
     }
 
-    public int GetTotalPoints(){
+    public int getTotalPoints(){
         int total = 0;
         for (Member member : this.members){
             total += member.getTotalPoints();
@@ -48,7 +48,7 @@ public class Cache {
         return total;
     }
 
-    public void AddMember(Member member){
+    public void addMember(Member member){
         this.members.add(member);
     }
 

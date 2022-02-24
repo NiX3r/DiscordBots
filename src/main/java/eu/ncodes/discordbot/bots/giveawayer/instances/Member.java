@@ -1,19 +1,20 @@
 package eu.ncodes.discordbot.bots.giveawayer.instances;
 
+import java.time.LocalDateTime;
+
 public class Member {
 
     private long userId;
+    private LocalDateTime joinDate;
     private int messagePoints;
     private int boostPoints;
     private int invitePoints;
     private int callPoints;
 
-    public Member(long userId, int messagePoints, int boostPoints, int invitePoints, int callPoints){
+    public Member(long userId){
         this.userId = userId;
-        this.messagePoints = messagePoints;
-        this.boostPoints = boostPoints;
-        this.invitePoints = invitePoints;
-        this.callPoints = callPoints;
+        this.joinDate = LocalDateTime.now();
+        this.messagePoints = this.boostPoints = this.invitePoints = this.callPoints = 0;
     }
 
     // GETTERS
