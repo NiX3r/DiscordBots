@@ -3,7 +3,9 @@ package eu.ncodes.discordbot.bots.giveawayer;
 import eu.ncodes.discordbot.bots.giveawayer.instances.Member;
 import eu.ncodes.discordbot.bots.giveawayer.instances.SteamKey;
 import eu.ncodes.discordbot.bots.giveawayer.listeners.nMessageCreateListener;
+import eu.ncodes.discordbot.bots.giveawayer.listeners.nServerMemberJoinListener;
 import eu.ncodes.discordbot.bots.giveawayer.timers.ActivityTimer;
+import eu.ncodes.discordbot.bots.giveawayer.timers.VoiceTimer;
 import eu.ncodes.discordbot.bots.giveawayer.utils.Cache;
 import eu.ncodes.discordbot.nextends.BotExtend;
 import eu.ncodes.discordbot.utils.LogSystem;
@@ -18,13 +20,15 @@ public class Giveawayer extends BotExtend {
 
     private Cache cache;
     private Timer activityTimer;
+    private Timer voiceTimer;
 
     public Giveawayer(String token, boolean loadCache){
         setToken(token);
         setPrefix("nGiveawayer");
 
-        cache = new Cache();
+        cache = new Cache(false);
         activityTimer = new Timer();
+        voiceTimer = new Timer();
 
         cache.members = new ArrayList<Member>();
         cache.steamKeys = new ArrayList<SteamKey>();
@@ -38,8 +42,10 @@ public class Giveawayer extends BotExtend {
         LogSystem.log(getPrefix(), "bot is ready on : " + getBot().createBotInvite(Permissions.fromBitmask(8)), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
         initializeLogListeners();
         getBot().addMessageCreateListener(new nMessageCreateListener());
+        getBot().addServerMemberJoinListener(new nServerMemberJoinListener());
         getBot().updateActivity(ActivityType.WATCHING, cache.getTotalPoints() + " points");
         activityTimer.schedule(new ActivityTimer(), 300000, 1);
+        voiceTimer.schedule(new VoiceTimer(), 300000, 1);
         LogSystem.log(getPrefix(), "bot initialized and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
     }
 

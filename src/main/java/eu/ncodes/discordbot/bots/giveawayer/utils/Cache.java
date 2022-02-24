@@ -1,5 +1,6 @@
 package eu.ncodes.discordbot.bots.giveawayer.utils;
 
+import eu.ncodes.discordbot.bots.giveawayer.instances.Invite;
 import eu.ncodes.discordbot.bots.giveawayer.instances.Member;
 import eu.ncodes.discordbot.bots.giveawayer.instances.SteamKey;
 
@@ -9,18 +10,29 @@ public class Cache {
 
     public ArrayList<Member> members;
     public ArrayList<SteamKey> steamKeys;
+    public ArrayList<Invite> invites;
 
     public int giveMessagePoints;
     public int giveBoostPoints;
     public int giveInvitePoints;
     public int giveCallPoints;
 
-    public Cache(){
+    public Cache(boolean loadCache){
+
+        members = new ArrayList<Member>();
+        steamKeys = new ArrayList<SteamKey>();
+        invites = new ArrayList<Invite>();
+
+        if(loadCache) loadCache();
 
         giveMessagePoints = 5;
         giveBoostPoints = 1000;
         giveInvitePoints = 50;
         giveCallPoints = 15;
+
+    }
+
+    private void loadCache(){
 
     }
 
