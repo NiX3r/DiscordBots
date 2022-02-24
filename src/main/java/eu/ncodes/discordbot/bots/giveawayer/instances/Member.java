@@ -32,6 +32,9 @@ public class Member {
     public int getCallPoints() {
         return callPoints;
     }
+    public int getTotalPoints(){
+        return this.getMessagePoints() + this.getBoostPoints() + this.getInvitePoints() + this.getCallPoints();
+    }
 
     // INCREMENTS
     public void incrementMessagePoints(int value){

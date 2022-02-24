@@ -40,6 +40,14 @@ public class Cache {
         return false;
     }
 
+    public int GetTotalPoints(){
+        int total = 0;
+        for (Member member : this.members){
+            total += member.getTotalPoints();
+        }
+        return total;
+    }
+
     public void AddMember(Member member){
         this.members.add(member);
     }
