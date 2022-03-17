@@ -20,6 +20,8 @@ public class Main {
 
         LogSystem.log("PROGRAM", "Program started. Initializing...", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 
+        //Runtime.getRuntime().addShutdownHook(new ShutdownThread());
+        
         DiscordUtils.bots = new HashMap<String, BotExtend>();
         if(args.length > 1){
             if(args[0].equals("-test") && args.length > 1){
@@ -62,8 +64,6 @@ public class Main {
         }
 
         LogSystem.log("PROGRAM", "Initialize finished", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
-
-        Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 
     }
 

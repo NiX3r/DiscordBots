@@ -1,6 +1,7 @@
 package eu.ncodes.discordbot.bots.adminer;
 
 import eu.ncodes.discordbot.bots.adminer.listeners.nMessageCreateListener;
+import eu.ncodes.discordbot.bots.adminer.listeners.nServerMemberJoinListener;
 import eu.ncodes.discordbot.nextends.BotExtend;
 import eu.ncodes.discordbot.utils.DiscordUtils;
 import eu.ncodes.discordbot.utils.LogSystem;
@@ -22,6 +23,7 @@ public class Adminer extends BotExtend {
         LogSystem.log(getPrefix(), "bot is ready on : " + getBot().createBotInvite(Permissions.fromBitmask(8)), new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
         initializeLogListeners();
         getBot().addMessageCreateListener(new nMessageCreateListener());
+        getBot().addServerMemberJoinListener(new nServerMemberJoinListener());
         getBot().updateActivity(ActivityType.LISTENING, " ncodes bots");
         LogSystem.log(getPrefix(), "bot initialized and turned on", new Throwable().getStackTrace()[0].getLineNumber(), new Throwable().getStackTrace()[0].getFileName(), new Throwable().getStackTrace()[0].getMethodName());
 

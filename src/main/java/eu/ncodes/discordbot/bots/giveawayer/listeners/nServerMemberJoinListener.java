@@ -11,10 +11,10 @@ public class nServerMemberJoinListener implements ServerMemberJoinListener {
     @Override
     public void onServerMemberJoin(ServerMemberJoinEvent serverMemberJoinEvent) {
 
-        for(Invite invite : ((Giveawayer) DiscordUtils.bots.get("giveawayer")).getCache().invites){
+        /*for(Invite invite : ((Giveawayer) DiscordUtils.bots.get("giveawayer")).getCache().invites){
             ((Giveawayer) DiscordUtils.bots.get("giveawayer")).getBot().getInviteByCode(invite.getCode()).get()
                     .getApproximateMemberCount()
-        }
+        }*/
 
     }
 
