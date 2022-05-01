@@ -10,6 +10,8 @@ import org.javacord.api.entity.emoji.CustomEmoji;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 
+import java.util.HashMap;
+
 /*
     Class nMessageCreateListener
 
